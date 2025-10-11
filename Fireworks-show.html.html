@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎆 זיקוקים דיגיטליים</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #000428, #004e92);
+        }
+
+        canvas {
+            display: block;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        .title {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .fire-btn {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .fire-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .fire-btn:active {
+            transform: translateY(0);
+        }
+
+        .auto-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .auto-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.6);
+        }
+
+        .sound-btn {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            box-shadow: 0 3px 10px rgba(67, 233, 123, 0.4);
+        }
+
+        .sound-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 233, 123, 0.6);
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 3px 10px rgba(240, 147, 251, 0.4);
+        }
+
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(240, 147, 251, 0.6);
+        }
+
+        .info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .counter {
+            color: #FFD700;
+            font-size: 18px;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .pulsing {
+            animation: pulse 1.5s infinite;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            color: white;
+        }
+
+        .volume-slider {
+            flex: 1;
+            margin: 0 10px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworksCanvas"></canvas>
+    
+    <div class="controls">
+        <div class="title">🎆 זיקוקים דיגיטליים</div>
+        <div class="counter" id="counter">זיקוקים: 0</div>
+        <button class="button fire-btn" onclick="createRandomFirework()">🚀 שגר זיקוק!</button>
+        <button class="button auto-btn" id="autoBtn" onclick="toggleAuto()">✨ מופע אוטומטי</button>
+        <button class="button sound-btn" id="soundBtn" onclick="toggleSound()">🔊 סאונד: ON</button>
+        <div class="volume-control">
+            <span>🔉</span>
+            <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
+            <span>🔊</span>
+        </div>
+        <button class="button clear-btn" onclick="clearCanvas()">🧹 נקה מסך</button>
+        <div class="info pulsing">💡 לחץ על המסך ליצירת זיקוקים!</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        let fireworkCount = 0;
+        let autoMode = false;
+        let autoInterval;
+        let soundEnabled = true;
+        let volume = 0.5;
+
+        // Audio
+        let explosionSound;
+        
+        function initAudio() {
+            if (!explosionSound) {
+                explosionSound = new Audio('https://github.com/midragmyfit-del/math-games2/raw/refs/heads/main/9999.m4a');
+                explosionSound.volume = volume;
+            }
+        }
+
+        function playExplosionSound() {
+            if (!soundEnabled || !explosionSound) return;
+            
+            const sound = explosionSound.cloneNode();
+            sound.volume = volume;
+            sound.play().catch(e => console.log('Audio play failed:', e));
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundBtn');
+            
+            if (soundEnabled) {
+                initAudio();
+                btn.textContent = '🔊 סאונד: ON';
+                btn.style.background = 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)';
+            } else {
+                btn.textContent = '🔇 סאונד: OFF';
+                btn.style.background = 'linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';
+            }
+        }
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            volume = e.target.value / 100;
+            if (explosionSound) {
+                explosionSound.volume = volume;
+            }
+        });
+
+        class Particle {
+            constructor(x, y, color, velocity, gravity = 0.05) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = velocity;
+                this.gravity = gravity;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.01;
+                this.size = Math.random() * 3 + 1;
+            }
+
+            update() {
+                this.velocity.x *= 0.98;
+                this.velocity.y *= 0.98;
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class Firework {
+            constructor(x, y) {
+                this.x = x;
+                this.y = canvas.height;
+                this.targetY = y;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                this.velocity = 8;
+                this.exploded = false;
+                this.trail = [];
+            }
+
+            update() {
+                if (!this.exploded) {
+                    this.y -= this.velocity;
+                    this.trail.push({ x: this.x, y: this.y, alpha: 1 });
+                    
+                    if (this.trail.length > 10) {
+                        this.trail.shift();
+                    }
+
+                    if (this.y <= this.targetY) {
+                        this.explode();
+                    }
+                }
+            }
+
+            draw() {
+                if (!this.exploded) {
+                    this.trail.forEach((point, index) => {
+                        ctx.save();
+                        ctx.globalAlpha = (index / this.trail.length) * 0.5;
+                        ctx.fillStyle = this.color;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = this.color;
+                        ctx.beginPath();
+                        ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    });
+
+                    ctx.save();
+                    ctx.fillStyle = 'white';
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            explode() {
+                this.exploded = true;
+                playExplosionSound();
+                
+                const particleCount = Math.random() * 100 + 80;
+                const patterns = ['circle', 'heart', 'star', 'spiral'];
+                const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+
+                for (let i = 0; i < particleCount; i++) {
+                    let angle, speed;
+                    
+                    if (pattern === 'circle') {
+                        angle = (Math.PI * 2 * i) / particleCount;
+                        speed = Math.random() * 5 + 2;
+                    } else if (pattern === 'heart') {
+                        const t = (i / particleCount) * Math.PI * 2;
+                        angle = Math.atan2(
+                            13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t),
+                            16 * Math.pow(Math.sin(t), 3)
+                        );
+                        speed = Math.random() * 3 + 1.5;
+                    } else if (pattern === 'star') {
+                        const arms = 5;
+                        const armIndex = Math.floor(i / (particleCount / arms));
+                        angle = (Math.PI * 2 / arms) * armIndex + (Math.random() - 0.5) * 0.3;
+                        speed = Math.random() * 6 + 2;
+                    } else {
+                        angle = (Math.PI * 2 * i) / particleCount;
+                        speed = (i % 20) / 3 + 2;
+                    }
+
+                    const velocity = {
+                        x: Math.cos(angle) * speed,
+                        y: Math.sin(angle) * speed
+                    };
+
+                    const hue = (parseFloat(this.color.match(/\d+/)[0]) + Math.random() * 50 - 25) % 360;
+                    const color = `hsl(${hue}, 100%, ${Math.random() * 20 + 50}%)`;
+
+                    particles.push(new Particle(this.x, this.y, color, velocity));
+                }
+
+                if (Math.random() > 0.7) {
+                    setTimeout(() => {
+                        for (let i = 0; i < 30; i++) {
+                            const angle = (Math.PI * 2 * i) / 30;
+                            const speed = Math.random() * 3 + 1;
+                            const velocity = {
+                                x: Math.cos(angle) * speed,
+                                y: Math.sin(angle) * speed
+                            };
+                            const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                            particles.push(new Particle(this.x, this.y, color, velocity, 0.03));
+                        }
+                    }, 200);
+                }
+            }
+        }
+
+        let fireworks = [];
+
+        function createFirework(x, y) {
+            initAudio();
+            fireworks.push(new Firework(x, y));
+            fireworkCount++;
+            document.getElementById('counter').textContent = `זיקוקים: ${fireworkCount}`;
+        }
+
+        function createRandomFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height * 0.6;
+            createFirework(x, y);
+        }
+
+        function toggleAuto() {
+            autoMode = !autoMode;
+            const btn = document.getElementById('autoBtn');
+            
+            if (autoMode) {
+                btn.textContent = '⏸️ עצור מופע';
+                btn.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+                autoInterval = setInterval(() => {
+                    if (Math.random() > 0.3) {
+                        createRandomFirework();
+                    }
+                }, 500);
+            } else {
+                btn.textContent = '✨ מופע אוטומטי';
+                btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                clearInterval(autoInterval);
+            }
+        }
+
+        function clearCanvas() {
+            particles = [];
+            fireworks = [];
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < 50; i++) {
+                if (Math.random() > 0.99) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height * 0.5;
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(x, y, 1, 1);
+                }
+            }
+
+            fireworks.forEach((firework, index) => {
+                firework.update();
+                firework.draw();
+                if (firework.exploded) {
+                    fireworks.splice(index, 1);
+                }
+            });
+
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            createFirework(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        animate();
+
+        setTimeout(() => {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createRandomFirework(), i * 300);
+            }
+        }, 500);
+    </script>
+</body>
+</html>
