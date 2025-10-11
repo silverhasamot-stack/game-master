@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ספר הקסמים ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Animated stars background */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, #fbbf24, #ec4899, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .wand-icon {
+            font-size: 1.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .page-counter {
+            color: #d8b4fe;
+            font-size: 1.1rem;
+        }
+
+        .book-container {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .book-wrapper {
+            background: linear-gradient(135deg, #78350f, #451a03);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 4px solid #92400e;
+            position: relative;
+        }
+
+        .book-star {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .page {
+            position: relative;
+            border-radius: 20px;
+            padding: 30px 25px;
+            min-height: 350px;
+            max-height: 450px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .page::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .page::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .page::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .page::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .page.flipping {
+            animation: flip3d 0.6s ease-in-out;
+        }
+
+        @keyframes flip3d {
+          0% {
+            transform: perspective(1000px) rotateY(0deg);
+            filter: brightness(1);
+          }
+          15% {
+            filter: brightness(1.1);
+          }
+          50% {
+            transform: perspective(1000px) rotateY(180deg);
+            filter: brightness(1.3) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+          }
+          85% {
+            filter: brightness(1.1);
+          }
+          100% {
+            transform: perspective(1000px) rotateY(360deg);
+            filter: brightness(1);
+          }
+        }
+
+        .page-texture {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 10;
+            color: white;
+            text-align: center;
+        }
+
+        .page-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .page-title {
+            font-size: 1.7rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .page-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            font-weight: 500;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 0 10px;
+            max-width: 100%;
+        }
+
+        .page-decorations {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:not(:disabled) {
+            background: linear-gradient(135deg, #9333ea, #ec4899);
+            color: white;
+        }
+
+        .nav-button:not(:disabled):hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(147, 51, 234, 0.5);
+        }
+
+        .nav-button:disabled {
+            background: #4b5563;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: #c084fc;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            font-size: 1.5rem;
+        }
+
+        @keyframes sparkleFloat {
+          0% {
+            transform: translate(0, 0) rotate(0deg) scale(0);
+            opacity: 0;
+          }
+          20% {
+            opacity: 1;
+          }
+          100% {
+            transform: translate(var(--tx), var(--ty)) rotate(var(--rotate)) scale(1.5);
+            opacity: 0;
+          }
+        }
+
+        @keyframes starFloat {
+          0% {
+            transform: translate(0, 0) rotate(0deg) scale(0);
+            opacity: 0;
+          }
+          20% {
+            opacity: 1;
+          }
+          100% {
+            transform: translate(var(--tx), var(--ty)) rotate(var(--rotate)) scale(1.2);
+            opacity: 0;
+          }
+        }
+
+        .glow-effect {
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 50;
+            animation: pulseGlow 0.6s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .wand-icon {
+                font-size: 1.5rem;
+            }
+            
+            .page {
+                padding: 25px 20px;
+                min-height: 320px;
+            }
+            
+            .page-icon {
+                font-size: 2.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.4rem;
+            }
+            
+            .page-text {
+                font-size: 1rem;
+            }
+            
+            .book-wrapper {
+                padding: 20px;
+            }
+            
+            .nav-button {
+                padding: 10px 18px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="stars"></div>
+    <div id="particles"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="wand-icon">🪄</span>
+                ספר הקסמים
+                <span class="wand-icon">🪄</span>
+            </h1>
+            <p class="page-counter">עמוד <span id="currentPage">1</span> מתוך <span id="totalPages">10</span></p>
+        </div>
+
+        <div class="book-container">
+            <div class="book-wrapper">
+                <div class="book-star">⭐</div>
+
+                <div id="page" class="page">
+                    <div class="page-texture"></div>
+                    <div class="page-content">
+                        <div class="page-icon" id="pageIcon">✨</div>
+                        <h2 class="page-title" id="pageTitle">ברוכים הבאים</h2>
+                        <p class="page-text" id="pageText">ספר הקסמים הזה מלא בהודעות מיוחדות, ברכות וקסמים טובים. כל עמוד מחזיק בתוכו משהו מיוחד עבורך.</p>
+                    </div>
+                    <div class="page-decorations" style="top: 20px; left: 20px;">✨</div>
+                    <div class="page-decorations" style="top: 20px; right: 20px;">✨</div>
+                    <div class="page-decorations" style="bottom: 60px; left: 20px;">❤️</div>
+                    <div class="page-decorations" style="bottom: 60px; right: 20px;">❤️</div>
+                    <div class="page-number" id="pageNumber">1</div>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" id="prevBtn">
+                        ◀ עמוד קודם
+                    </button>
+                    <button class="nav-button" id="nextBtn">
+                        עמוד הבא ▶
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            ✨ ספר קסמים מיוחד ✨
+        </div>
+    </div>
+
+    <script>
+        const pages = [
+            {
+                title: "ברוכים הבאים",
+                content: "ספר הקסמים הזה מלא בהודעות מיוחדות, ברכות וקסמים טובים. כל עמוד מחזיק בתוכו משהו מיוחד עבורך.",
+                icon: "✨",
+                color: "linear-gradient(135deg, #9333ea, #ec4899)"
+            },
+            {
+                title: "קסם היום",
+                content: "החיוך שלך הוא הקסם החזק ביותר שיש לך. כשאתה מחייך, אתה משנה את העולם סביבך לטוב יותר.",
+                icon: "😊",
+                color: "linear-gradient(135deg, #eab308, #f97316)"
+            },
+            {
+                title: "ברכת האור",
+                content: "יהי אור בדרכך, כוח במעשיך, ושמחה בליבך. כל יום הוא הזדמנות חדשה לקסם.",
+                icon: "🌟",
+                color: "linear-gradient(135deg, #3b82f6, #06b6d4)"
+            },
+            {
+                title: "חידה קסומה",
+                content: "יש לי כוכבים אך איני שמיים, יש לי גלים אך איני ים, יש לי זמן אך איני שעון. מה אני? (תשובה: החיים)",
+                icon: "🎭",
+                color: "linear-gradient(135deg, #4f46e5, #9333ea)"
+            },
+            {
+                title: "מתכון לאושר",
+                content: "קח שלושה חיוכים, הוסף מעט חמלה, ערבב עם הרבה אהבה, והגש חם לכל מי שתפגוש היום.",
+                icon: "🎂",
+                color: "linear-gradient(135deg, #ec4899, #f43f5e)"
+            },
+            {
+                title: "משפט כוח",
+                content: "אני חזק, אני מסוגל, אני ראוי לכל הדברים הטובים שקורים לי. הכוח שלי הוא האמונה בעצמי.",
+                icon: "💪",
+                color: "linear-gradient(135deg, #ef4444, #f97316)"
+            },
+            {
+                title: "סוד הכוכבים",
+                content: "הכוכבים מלמדים אותנו שגם בחושך הכי גדול, אור קטן יכול לזרוח רחוק. היה האור הקטן שלך.",
+                icon: "⭐",
+                color: "linear-gradient(135deg, #6366f1, #3b82f6)"
+            },
+            {
+                title: "ברכת הלב",
+                content: "ליבך יודע את הדרך. הקשב לו, סמוך עליו, והוא יוביל אותך למקומות קסומים שלא חלמת עליהם.",
+                icon: "❤️",
+                color: "linear-gradient(135deg, #f43f5e, #ec4899)"
+            },
+            {
+                title: "קסם הטבע",
+                content: "כמו פרח שפורח במדבר, גם אתה יכול לפרוח בכל מקום. הכוח נמצא בתוכך, לא בנסיבות.",
+                icon: "🌸",
+                color: "linear-gradient(135deg, #10b981, #059669)"
+            },
+            {
+                title: "משאלה אחרונה",
+                content: "סגור את העיניים, קח נשימה עמוקה, ובקש משאלה. היקום מקשיב. הקסם כבר בדרך אליך.",
+                icon: "🌠",
+                color: "linear-gradient(135deg, #9333ea, #4f46e5)"
+            }
+        ];
+
+        let currentPageIndex = 0;
+        let isFlipping = false;
+
+        const pageElement = document.getElementById('page');
+        const pageIcon = document.getElementById('pageIcon');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageText = document.getElementById('pageText');
+        const pageNumber = document.getElementById('pageNumber');
+        const currentPageSpan = document.getElementById('currentPage');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const particlesContainer = document.getElementById('particles');
+
+        // Create stars background
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 3}s`;
+            star.style.animationDuration = `${2 + Math.random() * 2}s`;
+            starsContainer.appendChild(star);
+        }
+
+        function updatePage() {
+            const page = pages[currentPageIndex];
+            pageIcon.textContent = page.icon;
+            pageTitle.textContent = page.title;
+            pageText.textContent = page.content;
+            pageNumber.textContent = currentPageIndex + 1;
+            currentPageSpan.textContent = currentPageIndex + 1;
+            pageElement.style.background = page.color;
+
+            prevBtn.disabled = currentPageIndex === 0;
+            nextBtn.disabled = currentPageIndex === pages.length - 1;
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const isSparkle = Math.random() > 0.5;
+                particle.textContent = isSparkle ? '✨' : '⭐';
+                
+                const startX = 30 + Math.random() * 40;
+                const startY = 20 + Math.random() * 60;
+                const tx = (Math.random() * 100 - 50) + 'px';
+                const ty = -(100 + Math.random() * 50) + 'px';
+                const rotate = (Math.random() * 720) + 'deg';
+                
+                particle.style.left = startX + '%';
+                particle.style.top = startY + '%';
+                particle.style.setProperty('--tx', tx);
+                particle.style.setProperty('--ty', ty);
+                particle.style.setProperty('--rotate', rotate);
+                particle.style.animation = `${isSparkle ? 'sparkleFloat' : 'starFloat'} 1.5s ease-out ${Math.random() * 0.3}s forwards`;
+                particle.style.filter = `drop-shadow(0 0 8px ${isSparkle ? 'rgba(253, 224, 71, 0.8)' : 'rgba(244, 114, 182, 0.8)'})`;
+                
+                particlesContainer.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
+
+        function flipPage() {
+            if (isFlipping) return;
+            isFlipping = true;
+            
+            pageElement.classList.add('flipping');
+            createParticles();
+            
+            const glow = document.createElement('div');
+            glow.className = 'glow-effect';
+            pageElement.appendChild(glow);
+            
+            setTimeout(() => {
+                updatePage();
+            }, 300);
+            
+            setTimeout(() => {
+                pageElement.classList.remove('flipping');
+                glow.remove();
+                isFlipping = false;
+            }, 600);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                flipPage();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPageIndex < pages.length - 1) {
+                currentPageIndex++;
+                flipPage();
+            }
+        });
+
+        // Initialize
+        updatePage();
+    </script>
+</body>
+</html>
