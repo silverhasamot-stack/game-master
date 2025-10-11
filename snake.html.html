@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐍 הנחש החמוד שלי 💚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 50%, #a6c1ee 100%);
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .main-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+        }
+        
+        .container {
+            text-align: center;
+            position: relative;
+        }
+        
+        .name-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .name-popup.hidden {
+            display: none;
+        }
+        
+        .name-box {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 50px rgba(52, 211, 153, 0.5);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .name-box h2 {
+            color: #10b981;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .name-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            border: 3px solid #6ee7b7;
+            border-radius: 15px;
+            text-align: center;
+            font-family: 'Comic Sans MS', sans-serif;
+            margin-bottom: 20px;
+        }
+        
+        .name-box input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .name-box button {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .name-box button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .snake-container {
+            width: 400px;
+            height: 450px;
+            position: relative;
+            margin: 0 auto;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .snake-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .body-segment {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+            box-shadow: 0 5px 15px rgba(52, 211, 153, 0.3);
+            animation: breathe 3s ease-in-out infinite;
+        }
+        
+        .body-segment::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: linear-gradient(135deg, #86efac 0%, #6ee7b7 100%);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+        }
+        
+        .body-segment::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #059669;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        
+        .segment-1 {
+            width: 70px;
+            height: 70px;
+            bottom: 35px;
+            left: 15px;
+            animation-delay: 0s;
+        }
+        
+        .segment-1::after {
+            top: 20%;
+            left: 20%;
+        }
+        
+        .segment-2 {
+            width: 80px;
+            height: 80px;
+            bottom: 60px;
+            left: 50px;
+            animation-delay: 0.1s;
+        }
+        
+        .segment-2::after {
+            top: 30%;
+            right: 20%;
+        }
+        
+        .segment-3 {
+            width: 90px;
+            height: 90px;
+            bottom: 95px;
+            left: 95px;
+            animation-delay: 0.2s;
+        }
+        
+        .segment-3::after {
+            bottom: 25%;
+            left: 25%;
+        }
+        
+        .segment-4 {
+            width: 95px;
+            height: 95px;
+            bottom: 135px;
+            left: 130px;
+            animation-delay: 0.3s;
+        }
+        
+        .segment-4::after {
+            top: 35%;
+            right: 25%;
+        }
+        
+        .segment-5 {
+            width: 100px;
+            height: 100px;
+            bottom: 175px;
+            left: 150px;
+            animation-delay: 0.4s;
+        }
+        
+        .segment-5::after {
+            bottom: 30%;
+            left: 30%;
+        }
+        
+        .head {
+            width: 140px;
+            height: 120px;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+            border-radius: 60% 60% 50% 50%;
+            position: absolute;
+            top: 165px;
+            left: 130px;
+            box-shadow: 0 8px 25px rgba(52, 211, 153, 0.4);
+            animation: headSway 4s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .head::before {
+            content: '';
+            width: 100px;
+            height: 90px;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 25px;
+            left: 20px;
+        }
+        
+        .tongue-container {
+            position: absolute;
+            bottom: 10px;
+            left: 60px;
+            width: 20px;
+            height: 30px;
+            overflow: visible;
+            z-index: 15;
+        }
+        
+        .tongue {
+            width: 4px;
+            height: 0;
+            background: #ef4444;
+            position: absolute;
+            bottom: 0;
+            left: 8px;
+            transition: height 0.3s ease;
+        }
+        
+        .tongue.out {
+            height: 40px;
+            animation: tongueFlick 0.3s ease-in-out 3;
+        }
+        
+        .tongue::before,
+        .tongue::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 12px;
+            background: #ef4444;
+            top: -12px;
+        }
+        
+        .tongue::before {
+            left: -3px;
+            transform: rotate(-30deg);
+        }
+        
+        .tongue::after {
+            right: -3px;
+            transform: rotate(30deg);
+        }
+        
+        .eyes {
+            position: absolute;
+            top: 40px;
+            left: 30px;
+            width: 80px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 12;
+        }
+        
+        .eye {
+            width: 30px;
+            height: 35px;
+            background: #fbbf24;
+            border-radius: 50%;
+            position: relative;
+            animation: blink 5s ease-in-out infinite;
+            box-shadow: 0 3px 10px rgba(251, 191, 36, 0.4);
+        }
+        
+        .pupil {
+            width: 8px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 7.5px;
+            left: 11px;
+        }
+        
+        .shine {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+        }
+        
+        .eyelid {
+            position: absolute;
+            width: 100%;
+            height: 0;
+            background: #6ee7b7;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            transition: height 0.1s ease;
+        }
+        
+        .eye.blinking .eyelid {
+            height: 100%;
+        }
+        
+        .scales {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            width: 120px;
+            height: 80px;
+            z-index: 5;
+        }
+        
+        .scale {
+            position: absolute;
+            width: 25px;
+            height: 20px;
+            background: rgba(5, 150, 105, 0.3);
+            border-radius: 50%;
+            border: 2px solid rgba(5, 150, 105, 0.2);
+        }
+        
+        .scale:nth-child(1) { top: 10px; left: 20px; }
+        .scale:nth-child(2) { top: 10px; left: 50px; }
+        .scale:nth-child(3) { top: 10px; left: 80px; }
+        .scale:nth-child(4) { top: 30px; left: 35px; }
+        .scale:nth-child(5) { top: 30px; left: 65px; }
+        .scale:nth-child(6) { top: 50px; left: 20px; }
+        .scale:nth-child(7) { top: 50px; left: 50px; }
+        .scale:nth-child(8) { top: 50px; left: 80px; }
+        
+        .cheeks {
+            position: absolute;
+            top: 65px;
+            left: 15px;
+            width: 110px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 11;
+        }
+        
+        .cheek {
+            width: 40px;
+            height: 35px;
+            background: radial-gradient(circle, rgba(134, 239, 172, 0.8) 0%, rgba(134, 239, 172, 0) 70%);
+            border-radius: 50%;
+            animation: blush 3s ease-in-out infinite;
+        }
+        
+        .tail {
+            position: absolute;
+            bottom: 20px;
+            left: 5px;
+            width: 50px;
+            height: 50px;
+            z-index: 1;
+        }
+        
+        .tail-tip {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+            border-radius: 0 60% 80% 80%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            animation: tailRattle 2s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(52, 211, 153, 0.3);
+            transform-origin: top left;
+        }
+        
+        .tail-tip::before {
+            content: '';
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #86efac 0%, #6ee7b7 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+        
+        .rattle-segment {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #fbbf24;
+            border-radius: 50%;
+            border: 2px solid #f59e0b;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
+        }
+        
+        .rattle-segment:nth-child(1) {
+            bottom: -5px;
+            left: -8px;
+        }
+        
+        .rattle-segment:nth-child(2) {
+            bottom: -10px;
+            left: -15px;
+            width: 12px;
+            height: 12px;
+        }
+        
+        .rattle-segment:nth-child(3) {
+            bottom: -13px;
+            left: -20px;
+            width: 10px;
+            height: 10px;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: floatHeart 2s ease-out forwards;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        .petting-hand {
+            position: absolute;
+            font-size: 60px;
+            top: -50px;
+            left: 150px;
+            opacity: 0;
+            transform: rotate(-30deg);
+            pointer-events: none;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            z-index: 100;
+        }
+        
+        .petting-hand.active {
+            animation: petAnimationSnake 2s ease-in-out;
+        }
+        
+        .food {
+            position: absolute;
+            font-size: 50px;
+            top: 280px;
+            left: 185px;
+            opacity: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+        
+        .food.flying {
+            animation: foodFlySnake 1s ease-in-out forwards;
+        }
+        
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        
+        .btn-feed {
+            background: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%);
+            color: white;
+        }
+        
+        .btn-pet {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0) scale(1);
+        }
+        
+        .title {
+            color: #10b981;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(16, 185, 129, 0.3);
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .title:hover {
+            transform: scale(1.05);
+        }
+        
+        .status {
+            color: #10b981;
+            font-size: 24px;
+            margin-top: 25px;
+            height: 35px;
+            text-shadow: 2px 2px 4px rgba(16, 185, 129, 0.3);
+            font-weight: bold;
+        }
+        
+        .love-meter-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            min-width: 220px;
+        }
+        
+        .love-meter-title {
+            color: #10b981;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .love-bar-container {
+            width: 100%;
+            height: 30px;
+            background: #d1fae5;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #6ee7b7;
+            position: relative;
+        }
+        
+        .love-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6ee7b7 0%, #10b981 100%);
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .love-percentage {
+            color: #10b981;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .love-status {
+            color: #6ee7b7;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: center;
+            height: 20px;
+        }
+        
+        .last-interaction {
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            color: #fbbf24;
+            font-size: 20px;
+            animation: sparkle 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes headSway {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-10px) rotate(-3deg); }
+            50% { transform: translateX(0) rotate(0deg); }
+            75% { transform: translateX(10px) rotate(3deg); }
+        }
+        
+        @keyframes headExcited {
+            0%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+            25% { transform: translateX(-15px) rotate(-8deg) scale(1.05); }
+            50% { transform: translateX(15px) rotate(8deg) scale(1.08); }
+            75% { transform: translateX(-10px) rotate(-5deg) scale(1.05); }
+        }
+        
+        @keyframes bodyWiggle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-5px) rotate(-5deg); }
+        }
+        
+        @keyframes tailRattle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(10deg); }
+        }
+        
+        @keyframes tailRattleFast {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(-15deg); }
+            20% { transform: rotate(15deg); }
+            30% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            60% { transform: rotate(15deg); }
+            70% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
+            90% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes tongueFlick {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes blink {
+            0%, 94%, 100% { transform: scaleY(1); }
+            95%, 97% { transform: scaleY(0.1); }
+        }
+        
+        @keyframes eyesHappy {
+            0%, 100% { transform: scaleY(0.6) scaleX(1.1); }
+        }
+        
+        @keyframes blush {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes floatHeart {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(0, -50px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(0, -100px) scale(0.5);
+            }
+        }
+        
+        @keyframes foodFlySnake {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(-5px, -90px) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-5px, -130px) rotate(360deg) scale(0.5);
+            }
+        }
+        
+        @keyframes petAnimationSnake {
+            0% {
+                opacity: 0;
+                top: -80px;
+                left: 100px;
+                transform: rotate(-30deg) scale(0.8);
+            }
+            20% {
+                opacity: 1;
+                top: 100px;
+                left: 130px;
+                transform: rotate(-20deg) scale(1);
+            }
+            40% {
+                top: 110px;
+                left: 140px;
+                transform: rotate(-15deg) scale(1.05);
+            }
+            50% {
+                top: 105px;
+                left: 135px;
+                transform: rotate(-18deg) scale(1.05);
+            }
+            60% {
+                top: 110px;
+                left: 140px;
+                transform: rotate(-15deg) scale(1.05);
+            }
+            70% {
+                top: 105px;
+                left: 135px;
+                transform: rotate(-18deg) scale(1.05);
+            }
+            80% {
+                opacity: 1;
+                top: 110px;
+                left: 140px;
+                transform: rotate(-15deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                top: -80px;
+                left: 100px;
+                transform: rotate(-30deg) scale(0.8);
+            }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="name-popup" id="namePopup">
+        <div class="name-box">
+            <h2>איזה שם תרצה לתת לנחש שלך 🐍💚</h2>
+            <input type="text" id="snakeNameInput" placeholder="הקלד שם..." maxlength="15">
+            <button onclick="saveSnakeName()">שמור 💚</button>
+        </div>
+    </div>
+    
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="title" id="snakeTitle" onclick="changeName()">🐍 הנחש החמוד שלי 💚</div>
+            
+            <div class="snake-container" id="snakeContainer">
+                <div class="snake-body">
+                    <div class="tail">
+                        <div class="tail-tip">
+                            <div class="rattle-segment"></div>
+                            <div class="rattle-segment"></div>
+                            <div class="rattle-segment"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="body-segment segment-1"></div>
+                    <div class="body-segment segment-2"></div>
+                    <div class="body-segment segment-3"></div>
+                    <div class="body-segment segment-4"></div>
+                    <div class="body-segment segment-5"></div>
+                    
+                    <div class="head">
+                        <div class="scales">
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                            <div class="scale"></div>
+                        </div>
+                        
+                        <div class="eyes">
+                            <div class="eye">
+                                <div class="pupil"></div>
+                                <div class="shine"></div>
+                                <div class="eyelid"></div>
+                            </div>
+                            <div class="eye">
+                                <div class="pupil"></div>
+                                <div class="shine"></div>
+                                <div class="eyelid"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="cheeks">
+                            <div class="cheek"></div>
+                            <div class="cheek"></div>
+                        </div>
+                        
+                        <div class="tongue-container">
+                            <div class="tongue" id="tongue"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="food" id="food">🐭</div>
+                <div class="petting-hand" id="pettingHand">✋</div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-feed" onclick="feedSnake()">🐭 האכל</button>
+                <button class="btn btn-pet" onclick="petSnake()">💚 ללטף</button>
+            </div>
+            
+            <div class="status" id="status"></div>
+        </div>
+        
+        <div class="love-meter-container">
+            <div class="love-meter-title">💚 מד אהבה</div>
+            <div class="love-bar-container">
+                <div class="love-bar" id="loveBar"></div>
+            </div>
+            <div class="love-percentage" id="lovePercentage">75%</div>
+            <div class="love-status" id="loveStatus">רגוע 😊</div>
+            <div class="last-interaction" id="lastInteraction">לחץ כדי לטפל בנחש</div>
+        </div>
+    </div>
+
+    <script>
+        let isFeeding = false;
+        let meals = 0;
+        let pets = 0;
+        let loveLevel = 75;
+        let lastInteractionTime = Date.now();
+        let snakeName = '';
+        
+        // טעינה מוקדמת של צלילים
+        const petAudioElement = new Audio();
+        petAudioElement.src = 'https://files.catbox.moe/w0j8el.mp3';
+        petAudioElement.volume = 0.6;
+        petAudioElement.preload = 'auto';
+        
+        petAudioElement.addEventListener('canplaythrough', function() {
+            console.log('Pet sound loaded successfully!');
+        });
+        
+        petAudioElement.addEventListener('error', function(e) {
+            console.log('Pet sound loading error:', e);
+        });
+        
+        if (localStorage.getItem('snakeName')) {
+            snakeName = localStorage.getItem('snakeName');
+            document.getElementById('snakeTitle').textContent = `🐍 ${snakeName} 💚`;
+            document.getElementById('namePopup').classList.add('hidden');
+        } else {
+            setTimeout(() => {
+                document.getElementById('snakeNameInput').focus();
+            }, 500);
+        }
+        
+        function saveSnakeName() {
+            const input = document.getElementById('snakeNameInput').value.trim();
+            if (input) {
+                snakeName = input;
+                localStorage.setItem('snakeName', snakeName);
+                document.getElementById('snakeTitle').textContent = `🐍 ${snakeName} 💚`;
+                document.getElementById('namePopup').classList.add('hidden');
+            }
+        }
+        
+        function changeName() {
+            document.getElementById('namePopup').classList.remove('hidden');
+            document.getElementById('snakeNameInput').value = snakeName;
+            document.getElementById('snakeNameInput').focus();
+        }
+        
+        document.getElementById('snakeNameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                saveSnakeName();
+            }
+        });
+        
+        function updateLoveDisplay() {
+            const loveBar = document.getElementById('loveBar');
+            const lovePercentage = document.getElementById('lovePercentage');
+            const loveStatus = document.getElementById('loveStatus');
+            
+            loveBar.style.width = loveLevel + '%';
+            lovePercentage.textContent = loveLevel + '%';
+            
+            if (loveLevel >= 90) {
+                loveStatus.textContent = 'מרוצה מאוד 🐍💚';
+                loveBar.style.background = 'linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%)';
+            } else if (loveLevel >= 70) {
+                loveStatus.textContent = 'רגוע 😊';
+                loveBar.style.background = 'linear-gradient(90deg, #6ee7b7 0%, #10b981 100%)';
+            } else if (loveLevel >= 50) {
+                loveStatus.textContent = 'בסדר 🙂';
+                loveBar.style.background = 'linear-gradient(90deg, #86efac 0%, #6ee7b7 100%)';
+            } else if (loveLevel >= 30) {
+                loveStatus.textContent = 'לא רגוע 😔';
+                loveBar.style.background = 'linear-gradient(90deg, #a7f3d0 0%, #86efac 100%)';
+            } else {
+                loveStatus.textContent = 'זקוק לתשומת לב 😢';
+                loveBar.style.background = 'linear-gradient(90deg, #ddd 0%, #a7f3d0 100%)';
+            }
+            
+            localStorage.setItem('snakeLoveLevel', loveLevel);
+            localStorage.setItem('snakeLastInteraction', lastInteractionTime);
+        }
+        
+        function updateLastInteraction() {
+            lastInteractionTime = Date.now();
+            const lastInteractionEl = document.getElementById('lastInteraction');
+            lastInteractionEl.textContent = 'זה עתה טיפלת בנחש 💚';
+            setTimeout(() => updateTimeDisplay(), 3000);
+        }
+        
+        function updateTimeDisplay() {
+            const lastInteractionEl = document.getElementById('lastInteraction');
+            const now = Date.now();
+            const diff = now - lastInteractionTime;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) {
+                lastInteractionEl.textContent = `לפני ${days} ימים`;
+            } else if (hours > 0) {
+                lastInteractionEl.textContent = `לפני ${hours} שעות`;
+            } else if (minutes > 0) {
+                lastInteractionEl.textContent = `לפני ${minutes} דקות`;
+            } else {
+                lastInteractionEl.textContent = 'זה עתה';
+            }
+        }
+        
+        setInterval(() => {
+            const now = Date.now();
+            const hoursPassed = (now - lastInteractionTime) / (1000 * 60 * 60);
+            
+            if (hoursPassed >= 2 && loveLevel > 0) {
+                const decreaseAmount = Math.floor(hoursPassed / 2);
+                loveLevel = Math.max(0, loveLevel - decreaseAmount);
+                lastInteractionTime = now - (hoursPassed % 2) * 2 * 60 * 60 * 1000;
+                updateLoveDisplay();
+            }
+            
+            updateTimeDisplay();
+        }, 60000);
+        
+        updateLoveDisplay();
+        updateTimeDisplay();
+        
+        function flickTongue() {
+            const tongue = document.getElementById('tongue');
+            tongue.classList.add('out');
+            setTimeout(() => {
+                tongue.classList.remove('out');
+            }, 900);
+        }
+        
+        function feedSnake() {
+            if (isFeeding) return;
+            isFeeding = true;
+            
+            const food = document.getElementById('food');
+            const status = document.getElementById('status');
+            const head = document.querySelector('.head');
+            const bodySegments = document.querySelectorAll('.body-segment');
+            const tail = document.querySelector('.tail-tip');
+            const eyes = document.querySelectorAll('.eye');
+            const tongue = document.getElementById('tongue');
+            
+            loveLevel = Math.min(100, loveLevel + 8);
+            updateLoveDisplay();
+            updateLastInteraction();
+            
+            food.classList.add('flying');
+            tail.style.animation = 'tailRattleFast 1s ease-in-out infinite';
+            
+            bodySegments.forEach((segment, index) => {
+                segment.style.animation = `bodyWiggle 0.4s ease-in-out infinite`;
+                segment.style.animationDelay = (index * 0.05) + 's';
+            });
+            
+            flickTongue();
+            
+            setTimeout(() => {
+                const eatAudio = new Audio('https://files.catbox.moe/4tz9mk.mp3');
+                eatAudio.volume = 0.5;
+                eatAudio.play().catch(err => console.log('Sound error:', err));
+                
+                head.style.animation = 'headExcited 0.8s ease-in-out';
+                tongue.classList.add('out');
+            }, 600);
+            
+            setTimeout(() => {
+                food.classList.remove('flying');
+                tongue.classList.remove('out');
+                
+                eyes.forEach(eye => {
+                    eye.style.animation = 'eyesHappy 0.5s ease-in-out';
+                });
+                
+                bodySegments.forEach((segment, index) => {
+                    segment.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        segment.style.transform = '';
+                    }, 500);
+                });
+                
+                meals++;
+                
+                const messages = [
+                    'ממ כמה טעים 🐭',
+                    'תודה רבה 💚',
+                    'ססס~ מעולה ✨',
+                    'אני אוהב אותך 🌟',
+                    'איזה כיף 🐍',
+                    'עוד בבקשה 💚'
+                ];
+                
+                status.textContent = messages[meals % messages.length];
+                createSparkles();
+                
+                setTimeout(() => {
+                    status.textContent = '';
+                    isFeeding = false;
+                    
+                    head.style.animation = 'headSway 4s ease-in-out infinite';
+                    tail.style.animation = 'tailRattle 2s ease-in-out infinite';
+                    bodySegments.forEach(segment => {
+                        segment.style.animation = 'breathe 3s ease-in-out infinite';
+                    });
+                    eyes.forEach(eye => {
+                        eye.style.animation = 'blink 5s ease-in-out infinite';
+                    });
+                }, 2500);
+            }, 1500);
+        }
+        
+        function petSnake() {
+            const status = document.getElementById('status');
+            const snakeContainer = document.getElementById('snakeContainer');
+            const pettingHand = document.getElementById('pettingHand');
+            const head = document.querySelector('.head');
+            const eyes = document.querySelectorAll('.eye');
+            const tail = document.querySelector('.tail-tip');
+            const cheeks = document.querySelectorAll('.cheek');
+            const bodySegments = document.querySelectorAll('.body-segment');
+            
+            loveLevel = Math.min(100, loveLevel + 5);
+            updateLoveDisplay();
+            updateLastInteraction();
+            pets++;
+            
+            // נגן צליל ליטוף
+            petAudioElement.currentTime = 0;
+            petAudioElement.play().catch(err => console.log('Pet sound error:', err));
+            
+            pettingHand.classList.add('active');
+            
+            head.style.animation = 'none';
+            head.style.transform = 'translateX(10px) rotate(5deg)';
+            
+            eyes.forEach(eye => {
+                eye.style.animation = 'eyesHappy 0.8s ease-in-out';
+                eye.style.transform = 'scaleY(0.7) scaleX(1.1)';
+            });
+            
+            tail.style.animation = 'tailRattleFast 0.4s ease-in-out 5';
+            
+            cheeks.forEach(cheek => {
+                cheek.style.opacity = '1';
+                cheek.style.transform = 'scale(1.3)';
+            });
+            
+            bodySegments.forEach((segment, index) => {
+                segment.style.animation = `bodyWiggle 0.5s ease-in-out infinite`;
+                segment.style.animationDelay = (index * 0.08) + 's';
+            });
+            
+            flickTongue();
+            
+            setTimeout(() => {
+                pettingHand.classList.remove('active');
+                
+                setTimeout(() => {
+                    head.style.animation = 'headSway 4s ease-in-out infinite';
+                    head.style.transform = '';
+                    eyes.forEach(eye => {
+                        eye.style.animation = 'blink 5s ease-in-out infinite';
+                        eye.style.transform = '';
+                    });
+                    tail.style.animation = 'tailRattle 2s ease-in-out infinite';
+                    cheeks.forEach(cheek => {
+                        cheek.style.opacity = '';
+                        cheek.style.transform = '';
+                    });
+                    bodySegments.forEach(segment => {
+                        segment.style.animation = 'breathe 3s ease-in-out infinite';
+                    });
+                }, 500);
+            }, 2000);
+            
+            createHearts(snakeContainer);
+            
+            const petMessages = [
+                'ססס~ נחמד 💚',
+                'כל כך שמח 🐍',
+                'ניהה~ ✨',
+                'אוהב אותך 💕',
+                'מרגיש טוב~ 🌟',
+                'עוד בבקשה 💚',
+                'יאיי 💗'
+            ];
+            
+            status.textContent = petMessages[pets % petMessages.length];
+            setTimeout(() => {
+                status.textContent = '';
+            }, 2000);
+        }
+        
+        function createHearts(container) {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = ['💚', '💖', '💗', '💝', '✨'][Math.floor(Math.random() * 5)];
+                    heart.style.left = (Math.random() * 300 + 50) + 'px';
+                    heart.style.top = (Math.random() * 200 + 100) + 'px';
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+        
+        function createSparkles() {
+            const container = document.querySelector('.snake-container');
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.textContent = '✨';
+                    sparkle.style.left = (Math.random() * 350 + 25) + 'px';
+                    sparkle.style.top = (Math.random() * 350 + 25) + 'px';
+                    sparkle.style.animationDelay = (Math.random() * 0.5) + 's';
+                    container.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, i * 80);
+            }
+        }
+        
+        document.getElementById('snakeContainer').addEventListener('click', function(e) {
+            if (e.target === this || e.target.closest('.head, .body-segment, .tail')) {
+                petSnake();
+            }
+        });
+        
+        setInterval(() => {
+            if (Math.random() > 0.85) {
+                flickTongue();
+            }
+        }, 4000);
+        
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = ['✨', '💚', '🌿'][Math.floor(Math.random() * 3)];
+                sparkle.style.left = (Math.random() * window.innerWidth) + 'px';
+                sparkle.style.top = (Math.random() * window.innerHeight) + 'px';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 2000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
