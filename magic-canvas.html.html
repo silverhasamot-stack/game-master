@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לוח ציור קסום - צייר באור ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #581c87 50%, #831843 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(to right, #f9a8d4, #c084fc, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .sparkle {
+            color: #fbbf24;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .subtitle {
+            color: #d8b4fe;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .panel h3 {
+            color: #d8b4fe;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .tool-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tool-btn.active {
+            background: #9333ea;
+            color: white;
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
+        }
+
+        .tool-btn:not(.active) {
+            background: rgba(147, 51, 234, 0.3);
+            color: #d8b4fe;
+        }
+
+        .tool-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .color-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .color-btn.active {
+            outline: 4px solid white;
+            transform: scale(1.15);
+        }
+
+        .stencil-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .stencil-btn {
+            padding: 10px;
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            border-radius: 10px;
+            background: rgba(147, 51, 234, 0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .stencil-btn:hover {
+            transform: scale(1.1);
+            background: rgba(147, 51, 234, 0.4);
+            border-color: rgba(168, 85, 247, 0.6);
+        }
+
+        .stencil-btn.active {
+            background: rgba(147, 51, 234, 0.6);
+            border-color: #9333ea;
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.8);
+        }
+
+        .slider-container {
+            text-align: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .slider-value {
+            color: #d8b4fe;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .magic-btn {
+            background: linear-gradient(to right, #db2777, #9333ea);
+            box-shadow: 0 0 20px rgba(219, 39, 119, 0.5);
+        }
+
+        .clear-btn {
+            background: rgba(220, 38, 38, 0.8);
+        }
+
+        .download-btn {
+            background: rgba(22, 163, 74, 0.8);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .price-tag {
+            text-align: center;
+            color: #c084fc;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .canvas-container {
+            position: relative;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);
+        }
+
+        #drawingCanvas {
+            width: 100%;
+            display: block;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .sparkle-effect {
+            position: absolute;
+            pointer-events: none;
+            animation: sparkleFloat 1s ease-out forwards;
+        }
+
+        .tip {
+            color: #d8b4fe;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, -30px) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="sparkle">✨</span>
+                לוח ציור קסום
+                <span class="sparkle">✨</span>
+            </h1>
+            <p class="subtitle">צייר באור וצור קסם!</p>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar">
+                <!-- Tools Panel -->
+                <div class="panel">
+                    <h3>🎨 כלי ציור</h3>
+                    <div class="tool-buttons">
+                        <button class="tool-btn active" id="brushBtn">✨ מברשת קסם</button>
+                        <button class="tool-btn" id="eraserBtn">🧹 מחק</button>
+                    </div>
+                </div>
+
+                <!-- Colors Panel -->
+                <div class="panel">
+                    <h3>צבעי קסם</h3>
+                    <div class="color-grid" id="colorGrid"></div>
+                </div>
+
+                <!-- Brush Size Panel -->
+                <div class="panel">
+                    <h3>גודל מברשת</h3>
+                    <div class="slider-container">
+                        <input type="range" id="brushSize" min="2" max="30" value="8">
+                        <div class="slider-value"><span id="brushSizeValue">8</span>px</div>
+                    </div>
+                </div>
+
+                <!-- Glow Intensity Panel -->
+                <div class="panel">
+                    <h3>עוצמת זוהר</h3>
+                    <div class="slider-container">
+                        <input type="range" id="glowIntensity" min="0" max="50" value="20">
+                        <div class="slider-value" id="glowValue">20</div>
+                    </div>
+                </div>
+
+                <!-- Stencils Panel -->
+                <div class="panel">
+                    <h3>🎭 שבלונות קסומות</h3>
+                    <div class="stencil-grid" id="stencilGrid"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn magic-btn" id="magicBtn">🌈 קשת בענן</button>
+                    <button class="action-btn magic-btn" id="spiralBtn">🎆 ספירלה קסומה</button>
+                    <button class="action-btn clear-btn" id="clearBtn">🗑️ נקה הכל</button>
+                    <button class="action-btn download-btn" id="downloadBtn">💾 שמור יצירה</button>
+                </div>
+
+                <div class="price-tag">💫 פריט יוקרתי - 75 כוכבים</div>
+            </div>
+
+            <div class="canvas-container">
+                <div class="panel">
+                    <div class="canvas-wrapper" id="canvasWrapper">
+                        <canvas id="drawingCanvas" width="800" height="600"></canvas>
+                    </div>
+                    <p class="tip">💡 טיפ: השתמש במברשת קסם עם זוהר גבוה ליצירת אפקטים מדהימים!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        
+        // State
+        let isDrawing = false;
+        let currentColor = '#ff00ff';
+        let currentTool = 'brush';
+        let brushSize = 8;
+        let glowIntensity = 20;
+        let selectedStencil = null;
+
+        // Colors
+        const colors = [
+            { name: 'ורוד קסום', value: '#ff00ff' },
+            { name: 'כחול שמיים', value: '#00d4ff' },
+            { name: 'זהב', value: '#ffd700' },
+            { name: 'סגול קוסמי', value: '#9333ea' },
+            { name: 'ירוק נאון', value: '#00ff88' },
+            { name: 'אדום אש', value: '#ff3366' },
+            { name: 'כתום שקיעה', value: '#ff6b35' },
+            { name: 'לבן כוכבים', value: '#ffffff' }
+        ];
+
+        // Initialize canvas with starry background
+        function initCanvas() {
+            ctx.fillStyle = '#0a0a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add stars
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.3})`;
+                ctx.beginPath();
+                ctx.arc(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    Math.random() * 1.5,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+        }
+
+        // Initialize color buttons
+        function initColorButtons() {
+            const colorGrid = document.getElementById('colorGrid');
+            colors.forEach(color => {
+                const btn = document.createElement('button');
+                btn.className = 'color-btn';
+                btn.style.backgroundColor = color.value;
+                btn.style.boxShadow = `0 0 20px ${color.value}80`;
+                btn.title = color.name;
+                if (color.value === currentColor) btn.classList.add('active');
+                
+                btn.onclick = () => {
+                    currentColor = color.value;
+                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                };
+                
+                colorGrid.appendChild(btn);
+            });
+        }
+
+        // Stencils
+        const stencils = [
+            { emoji: '⭐', name: 'כוכב', draw: drawStar },
+            { emoji: '❤️', name: 'לב', draw: drawHeart },
+            { emoji: '🌙', name: 'ירח', draw: drawMoon },
+            { emoji: '🐟', name: 'דג', draw: drawFish },
+            { emoji: '🐱', name: 'חתול', draw: drawCat },
+            { emoji: '🐶', name: 'כלב', draw: drawDog },
+            { emoji: '🐰', name: 'ארנב', draw: drawRabbit },
+            { emoji: '🐦', name: 'ציפור', draw: drawBird },
+            { emoji: '🌸', name: 'פרח', draw: drawFlower },
+            { emoji: '✨', name: 'ניצוץ', draw: drawSparkle },
+        ];
+
+        // Initialize stencil buttons
+        function initStencilButtons() {
+            const stencilGrid = document.getElementById('stencilGrid');
+            stencils.forEach(stencil => {
+                const btn = document.createElement('button');
+                btn.className = 'stencil-btn';
+                btn.innerHTML = stencil.emoji;
+                btn.title = stencil.name;
+                
+                btn.onclick = () => {
+                    // Toggle stencil mode
+                    if (selectedStencil === stencil) {
+                        selectedStencil = null;
+                        btn.classList.remove('active');
+                        canvas.style.cursor = 'crosshair';
+                    } else {
+                        selectedStencil = stencil;
+                        document.querySelectorAll('.stencil-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        canvas.style.cursor = 'pointer';
+                        
+                        // Deactivate other tools
+                        currentTool = 'stencil';
+                        document.getElementById('brushBtn').classList.remove('active');
+                        document.getElementById('eraserBtn').classList.remove('active');
+                    }
+                };
+                
+                stencilGrid.appendChild(btn);
+            });
+        }
+
+        // Stencil drawing functions
+        function drawStar(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            ctx.beginPath();
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+                const px = x + Math.cos(angle) * size;
+                const py = y + Math.sin(angle) * size;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawHeart(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y + size / 4);
+            ctx.bezierCurveTo(x, y, x - size / 2, y - size / 2, x - size / 2, y + size / 4);
+            ctx.bezierCurveTo(x - size / 2, y + size / 2, x, y + size * 0.75, x, y + size);
+            ctx.bezierCurveTo(x, y + size * 0.75, x + size / 2, y + size / 2, x + size / 2, y + size / 4);
+            ctx.bezierCurveTo(x + size / 2, y - size / 2, x, y, x, y + size / 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawMoon(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size / 3, y - size / 6, size * 0.85, 0, Math.PI * 2);
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.restore();
+        }
+
+        function drawButterfly(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Body - longer and thinner
+            ctx.beginPath();
+            ctx.ellipse(x, y, size / 12, size / 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Antennae
+            ctx.beginPath();
+            ctx.moveTo(x, y - size / 1.5);
+            ctx.quadraticCurveTo(x - size / 6, y - size, x - size / 5, y - size * 1.1);
+            ctx.moveTo(x, y - size / 1.5);
+            ctx.quadraticCurveTo(x + size / 6, y - size, x + size / 5, y - size * 1.1);
+            ctx.stroke();
+            
+            // Upper wings - larger and more curved
+            ctx.beginPath();
+            ctx.ellipse(x - size / 2.5, y - size / 5, size / 1.6, size / 2.2, -Math.PI / 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(x + size / 2.5, y - size / 5, size / 1.6, size / 2.2, Math.PI / 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Lower wings - smaller
+            ctx.beginPath();
+            ctx.ellipse(x - size / 3, y + size / 2.5, size / 2.5, size / 3.5, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(x + size / 3, y + size / 2.5, size / 2.5, size / 3.5, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Wing patterns - small circles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.shadowBlur = 0;
+            
+            // Upper wing patterns
+            ctx.beginPath();
+            ctx.arc(x - size / 2.5, y - size / 5, size / 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size / 2.5, y - size / 5, size / 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Lower wing patterns
+            ctx.beginPath();
+            ctx.arc(x - size / 3, y + size / 2.5, size / 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size / 3, y + size / 2.5, size / 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawFish(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Body
+            ctx.beginPath();
+            ctx.ellipse(x, y, size * 0.6, size * 0.4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Tail
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.6, y);
+            ctx.lineTo(x + size, y - size * 0.4);
+            ctx.lineTo(x + size, y + size * 0.4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Eye
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(x - size * 0.3, y - size * 0.1, size * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawCat(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Head - slightly oval
+            ctx.beginPath();
+            ctx.ellipse(x, y, size * 0.45, size * 0.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Pointed ears - more triangular
+            ctx.beginPath();
+            ctx.moveTo(x - size * 0.4, y - size * 0.35);
+            ctx.lineTo(x - size * 0.25, y - size * 0.75);
+            ctx.lineTo(x - size * 0.1, y - size * 0.45);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.4, y - size * 0.35);
+            ctx.lineTo(x + size * 0.25, y - size * 0.75);
+            ctx.lineTo(x + size * 0.1, y - size * 0.45);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Inner ears - pink
+            ctx.fillStyle = 'rgba(255, 150, 200, 0.6)';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.moveTo(x - size * 0.35, y - size * 0.4);
+            ctx.lineTo(x - size * 0.25, y - size * 0.65);
+            ctx.lineTo(x - size * 0.18, y - size * 0.45);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.35, y - size * 0.4);
+            ctx.lineTo(x + size * 0.25, y - size * 0.65);
+            ctx.lineTo(x + size * 0.18, y - size * 0.45);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Eyes - almond shaped (cat eyes)
+            ctx.fillStyle = 'rgba(100, 255, 150, 0.9)';
+            ctx.shadowBlur = glowIntensity / 2;
+            ctx.shadowColor = 'rgba(100, 255, 150, 0.5)';
+            
+            // Left eye
+            ctx.beginPath();
+            ctx.ellipse(x - size * 0.18, y - size * 0.08, size * 0.12, size * 0.18, -Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Right eye
+            ctx.beginPath();
+            ctx.ellipse(x + size * 0.18, y - size * 0.08, size * 0.12, size * 0.18, Math.PI / 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Pupils - vertical slits
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.ellipse(x - size * 0.18, y - size * 0.08, size * 0.03, size * 0.12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x + size * 0.18, y - size * 0.08, size * 0.03, size * 0.12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Nose - small triangle
+            ctx.fillStyle = currentColor;
+            ctx.beginPath();
+            ctx.moveTo(x, y + size * 0.12);
+            ctx.lineTo(x - size * 0.06, y + size * 0.02);
+            ctx.lineTo(x + size * 0.06, y + size * 0.02);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Mouth - cute smile
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y + size * 0.12);
+            ctx.lineTo(x, y + size * 0.18);
+            ctx.moveTo(x, y + size * 0.18);
+            ctx.quadraticCurveTo(x - size * 0.12, y + size * 0.22, x - size * 0.18, y + size * 0.18);
+            ctx.moveTo(x, y + size * 0.18);
+            ctx.quadraticCurveTo(x + size * 0.12, y + size * 0.22, x + size * 0.18, y + size * 0.18);
+            ctx.stroke();
+            
+            // Whiskers - longer and thinner
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            // Left whiskers
+            ctx.moveTo(x - size * 0.45, y - size * 0.05);
+            ctx.lineTo(x - size * 0.15, y);
+            ctx.moveTo(x - size * 0.45, y + size * 0.05);
+            ctx.lineTo(x - size * 0.15, y + size * 0.08);
+            ctx.moveTo(x - size * 0.45, y + size * 0.15);
+            ctx.lineTo(x - size * 0.15, y + size * 0.15);
+            // Right whiskers
+            ctx.moveTo(x + size * 0.45, y - size * 0.05);
+            ctx.lineTo(x + size * 0.15, y);
+            ctx.moveTo(x + size * 0.45, y + size * 0.05);
+            ctx.lineTo(x + size * 0.15, y + size * 0.08);
+            ctx.moveTo(x + size * 0.45, y + size * 0.15);
+            ctx.lineTo(x + size * 0.15, y + size * 0.15);
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawDog(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Head - rounder
+            ctx.beginPath();
+            ctx.arc(x, y - size * 0.1, size * 0.45, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Snout - more prominent
+            ctx.beginPath();
+            ctx.arc(x, y + size * 0.25, size * 0.35, 0, Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Connect snout to head
+            ctx.beginPath();
+            ctx.moveTo(x - size * 0.35, y + size * 0.25);
+            ctx.lineTo(x - size * 0.3, y);
+            ctx.moveTo(x + size * 0.35, y + size * 0.25);
+            ctx.lineTo(x + size * 0.3, y);
+            ctx.stroke();
+            
+            // Floppy ears - more curved
+            ctx.beginPath();
+            ctx.ellipse(x - size * 0.45, y - size * 0.05, size * 0.2, size * 0.45, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(x + size * 0.45, y - size * 0.05, size * 0.2, size * 0.45, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Eyes - bigger and cuter
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.arc(x - size * 0.18, y - size * 0.15, size * 0.13, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size * 0.18, y - size * 0.15, size * 0.13, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Pupils
+            ctx.fillStyle = currentColor;
+            ctx.beginPath();
+            ctx.arc(x - size * 0.18, y - size * 0.15, size * 0.06, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size * 0.18, y - size * 0.15, size * 0.06, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Nose - heart shaped
+            ctx.beginPath();
+            ctx.moveTo(x, y + size * 0.35);
+            ctx.bezierCurveTo(x - size * 0.08, y + size * 0.28, x - size * 0.15, y + size * 0.32, x, y + size * 0.42);
+            ctx.bezierCurveTo(x + size * 0.15, y + size * 0.32, x + size * 0.08, y + size * 0.28, x, y + size * 0.35);
+            ctx.fill();
+            
+            // Tongue
+            ctx.fillStyle = 'rgba(255, 100, 150, 0.7)';
+            ctx.beginPath();
+            ctx.ellipse(x, y + size * 0.5, size * 0.12, size * 0.15, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawRabbit(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Head - more oval
+            ctx.beginPath();
+            ctx.ellipse(x, y + size * 0.1, size * 0.4, size * 0.45, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Long ears - more bunny-like
+            ctx.beginPath();
+            ctx.ellipse(x - size * 0.22, y - size * 0.45, size * 0.13, size * 0.55, -Math.PI / 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(x + size * 0.22, y - size * 0.45, size * 0.13, size * 0.55, Math.PI / 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Inner ears - pink
+            ctx.fillStyle = 'rgba(255, 150, 200, 0.6)';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.ellipse(x - size * 0.22, y - size * 0.45, size * 0.08, size * 0.4, -Math.PI / 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.ellipse(x + size * 0.22, y - size * 0.45, size * 0.08, size * 0.4, Math.PI / 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Eyes - big and round
+            ctx.fillStyle = 'rgba(50, 50, 50, 0.95)';
+            ctx.shadowBlur = glowIntensity / 3;
+            ctx.shadowColor = currentColor;
+            ctx.beginPath();
+            ctx.arc(x - size * 0.15, y, size * 0.11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size * 0.15, y, size * 0.11, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Eye shine - cute sparkle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.arc(x - size * 0.17, y - size * 0.02, size * 0.04, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size * 0.17, y - size * 0.02, size * 0.04, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Cheeks - fluffy
+            ctx.fillStyle = currentColor;
+            ctx.globalAlpha = 0.5;
+            ctx.beginPath();
+            ctx.arc(x - size * 0.35, y + size * 0.15, size * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + size * 0.35, y + size * 0.15, size * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            
+            // Nose - Y shape (bunny nose)
+            ctx.fillStyle = currentColor;
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x, y + size * 0.18, size * 0.06, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Mouth - Y shape from nose
+            ctx.beginPath();
+            ctx.moveTo(x, y + size * 0.24);
+            ctx.lineTo(x, y + size * 0.32);
+            ctx.moveTo(x, y + size * 0.32);
+            ctx.quadraticCurveTo(x - size * 0.08, y + size * 0.35, x - size * 0.12, y + size * 0.32);
+            ctx.moveTo(x, y + size * 0.32);
+            ctx.quadraticCurveTo(x + size * 0.08, y + size * 0.35, x + size * 0.12, y + size * 0.32);
+            ctx.stroke();
+            
+            // Whiskers - multiple thin ones
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            // Left whiskers
+            ctx.moveTo(x - size * 0.4, y + size * 0.08);
+            ctx.lineTo(x - size * 0.15, y + size * 0.12);
+            ctx.moveTo(x - size * 0.4, y + size * 0.15);
+            ctx.lineTo(x - size * 0.15, y + size * 0.18);
+            ctx.moveTo(x - size * 0.38, y + size * 0.22);
+            ctx.lineTo(x - size * 0.15, y + size * 0.24);
+            // Right whiskers
+            ctx.moveTo(x + size * 0.4, y + size * 0.08);
+            ctx.lineTo(x + size * 0.15, y + size * 0.12);
+            ctx.moveTo(x + size * 0.4, y + size * 0.15);
+            ctx.lineTo(x + size * 0.15, y + size * 0.18);
+            ctx.moveTo(x + size * 0.38, y + size * 0.22);
+            ctx.lineTo(x + size * 0.15, y + size * 0.24);
+            ctx.stroke();
+            
+            // Front teeth - iconic!
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.roundRect(x - size * 0.06, y + size * 0.32, size * 0.05, size * 0.08, size * 0.02);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.roundRect(x + size * 0.01, y + size * 0.32, size * 0.05, size * 0.08, size * 0.02);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawBird(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Body
+            ctx.beginPath();
+            ctx.ellipse(x, y, size * 0.4, size * 0.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Head
+            ctx.beginPath();
+            ctx.arc(x - size * 0.25, y - size * 0.3, size * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Beak
+            ctx.beginPath();
+            ctx.moveTo(x - size * 0.45, y - size * 0.3);
+            ctx.lineTo(x - size * 0.7, y - size * 0.3);
+            ctx.lineTo(x - size * 0.45, y - size * 0.2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Eye
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.arc(x - size * 0.25, y - size * 0.35, size * 0.08, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Wing
+            ctx.fillStyle = currentColor;
+            ctx.beginPath();
+            ctx.ellipse(x + size * 0.1, y, size * 0.4, size * 0.3, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Tail
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.4, y + size * 0.2);
+            ctx.lineTo(x + size * 0.7, y + size * 0.5);
+            ctx.lineTo(x + size * 0.4, y + size * 0.4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawFlower(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.fillStyle = currentColor;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = glowIntensity;
+            ctx.shadowColor = currentColor;
+            
+            // Petals
+            for (let i = 0; i < 8; i++) {
+                ctx.beginPath();
+                const angle = (i * Math.PI) / 4;
+                const px = x + Math.cos(angle) * size / 2;
+                const py = y + Math.sin(angle) * size / 2;
+                ctx.arc(px, py, size / 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Center
+            ctx.beginPath();
+            ctx.arc(x, y, size / 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawSparkle(x, y, size) {
+            ctx.save();
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.shadowBlur = glowIntensity * 2;
+            ctx.shadowColor = currentColor;
+            
+            // Four rays
+            ctx.beginPath();
+            ctx.moveTo(x, y - size);
+            ctx.lineTo(x, y + size);
+            ctx.moveTo(x - size, y);
+            ctx.lineTo(x + size, y);
+            ctx.moveTo(x - size * 0.7, y - size * 0.7);
+            ctx.lineTo(x + size * 0.7, y + size * 0.7);
+            ctx.moveTo(x + size * 0.7, y - size * 0.7);
+            ctx.lineTo(x - size * 0.7, y + size * 0.7);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // Drawing functions
+        function startDrawing(e) {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = ((e.clientX || e.touches[0].clientX) - rect.left) * scaleX;
+            const y = ((e.clientY || e.touches[0].clientY) - rect.top) * scaleY;
+            
+            // If stencil is selected, draw it at click position
+            if (currentTool === 'stencil' && selectedStencil) {
+                selectedStencil.draw(x, y, 80);
+                addSparkle(x, y);
+                return;
+            }
+            
+            isDrawing = true;
+            
+            if (currentTool === 'brush') {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.shadowBlur = glowIntensity;
+                ctx.shadowColor = currentColor;
+                
+                // Draw a dot at the starting point
+                ctx.beginPath();
+                ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+                ctx.fillStyle = currentColor;
+                ctx.fill();
+                
+                // Start new path for continuous drawing
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            } else if (currentTool === 'eraser') {
+                // Erase by drawing with background color
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#0a0a1a';
+                ctx.fillStyle = '#0a0a1a';
+                ctx.lineWidth = brushSize * 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.shadowBlur = 0;
+                
+                // Erase starting point
+                ctx.beginPath();
+                ctx.arc(x, y, brushSize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
+            
+            addSparkle(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = ((e.clientX || e.touches[0].clientX) - rect.left) * scaleX;
+            const y = ((e.clientY || e.touches[0].clientY) - rect.top) * scaleY;
+            
+            if (currentTool === 'brush') {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.shadowBlur = glowIntensity;
+                ctx.shadowColor = currentColor;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                if (Math.random() > 0.7) {
+                    addSparkle(x, y);
+                }
+            } else if (currentTool === 'eraser') {
+                // Erase by drawing with background color
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#0a0a1a';
+                ctx.lineWidth = brushSize * 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.shadowBlur = 0;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                ctx.beginPath();
+            }
+            isDrawing = false;
+        }
+
+        function addSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle-effect';
+            sparkle.innerHTML = '✨';
+            sparkle.style.left = `${x}px`;
+            sparkle.style.top = `${y}px`;
+            canvasWrapper.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+
+        function magicEffect() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height * 0.8;
+            const rainbowColors = [
+                '#FF0000', // אדום
+                '#FF7F00', // כתום
+                '#FFFF00', // צהוב
+                '#00FF00', // ירוק
+                '#0000FF', // כחול
+                '#4B0082', // אינדיגו
+                '#9400D3'  // סגול
+            ];
+            
+            ctx.save();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.lineCap = 'round';
+            
+            // Draw rainbow from outside to inside
+            for (let i = rainbowColors.length - 1; i >= 0; i--) {
+                setTimeout(() => {
+                    const radius = (canvas.width * 0.4) - (i * 25);
+                    ctx.strokeStyle = rainbowColors[i];
+                    ctx.lineWidth = 28;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = rainbowColors[i];
+                    
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, Math.PI, 0);
+                    ctx.stroke();
+                    
+                    // Add sparkles on the rainbow
+                    for (let j = 0; j < 5; j++) {
+                        const angle = Math.PI - (Math.PI * j / 4);
+                        const sparkleX = centerX + Math.cos(angle) * radius;
+                        const sparkleY = centerY + Math.sin(angle) * radius;
+                        
+                        setTimeout(() => {
+                            addSparkle(sparkleX, sparkleY);
+                        }, j * 50);
+                    }
+                }, i * 100);
+            }
+            
+            ctx.restore();
+        }
+
+        function spiralEffect() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            ctx.save();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            let angle = 0;
+            let radius = 0;
+            const maxRadius = Math.min(canvas.width, canvas.height) * 0.4;
+            const steps = 200;
+            
+            for (let i = 0; i < steps; i++) {
+                setTimeout(() => {
+                    angle += 0.3;
+                    radius = (i / steps) * maxRadius;
+                    
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    // Color changes through the spiral
+                    const hue = (i / steps) * 360;
+                    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                    ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = ctx.strokeStyle;
+                    
+                    if (i === 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineWidth = 3 + (i / steps) * 10;
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    }
+                    
+                    // Add sparkles along the spiral
+                    if (i % 10 === 0) {
+                        addSparkle(x, y);
+                        
+                        // Add small circles at intervals
+                        ctx.beginPath();
+                        ctx.arc(x, y, 5 + (i / steps) * 10, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }, i * 15);
+            }
+            
+            ctx.restore();
+        }
+
+        function clearCanvas() {
+            initCanvas();
+        }
+
+        function downloadImage() {
+            const url = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'magic-drawing.png';
+            link.href = url;
+            link.click();
+        }
+
+        // Event listeners
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+
+        // Touch events
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // Tool buttons
+        document.getElementById('brushBtn').onclick = () => {
+            currentTool = 'brush';
+            selectedStencil = null;
+            canvas.style.cursor = 'crosshair';
+            document.getElementById('brushBtn').classList.add('active');
+            document.getElementById('eraserBtn').classList.remove('active');
+            document.querySelectorAll('.stencil-btn').forEach(b => b.classList.remove('active'));
+        };
+
+        document.getElementById('eraserBtn').onclick = () => {
+            currentTool = 'eraser';
+            selectedStencil = null;
+            canvas.style.cursor = 'crosshair';
+            document.getElementById('eraserBtn').classList.add('active');
+            document.getElementById('brushBtn').classList.remove('active');
+            document.querySelectorAll('.stencil-btn').forEach(b => b.classList.remove('active'));
+        };
+
+        // Sliders
+        document.getElementById('brushSize').oninput = (e) => {
+            brushSize = Number(e.target.value);
+            document.getElementById('brushSizeValue').textContent = brushSize;
+        };
+
+        document.getElementById('glowIntensity').oninput = (e) => {
+            glowIntensity = Number(e.target.value);
+            document.getElementById('glowValue').textContent = glowIntensity;
+        };
+
+        // Action buttons
+        document.getElementById('magicBtn').onclick = magicEffect;
+        document.getElementById('spiralBtn').onclick = spiralEffect;
+        document.getElementById('clearBtn').onclick = clearCanvas;
+        document.getElementById('downloadBtn').onclick = downloadImage;
+
+        // Initialize
+        initCanvas();
+        initColorButtons();
+        initStencilButtons();
+    </script>
+</body>
+</html>
