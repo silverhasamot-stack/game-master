@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הסרטון שלי</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        video {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 הסרטון שלי</h1>
+        
+        <video id="myVideo" controls width="100%">
+            <source src="./video.mp4" type="video/mp4">
+            הדפדפן שלך לא תומך בהצגת וידאו
+        </video>
+        
+        <div class="info" id="status">
+            טוען את הסרטון...
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('myVideo');
+        const status = document.getElementById('status');
+        
+        video.addEventListener('loadeddata', function() {
+            status.innerHTML = '✅ הסרטון נטען בהצלחה! משך: ' + Math.round(video.duration) + ' שניות';
+            status.style.background = '#2e7d32';
+        });
+        
+        video.addEventListener('error', function() {
+            status.innerHTML = '❌ שגיאה בטעינת הסרטון<br>ודא ש-video.mp4 נמצא באותה תיקייה';
+            status.style.background = '#c62828';
+        });
+    </script>
+</body>
+</html>
