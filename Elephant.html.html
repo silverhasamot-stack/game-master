@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐘 הפיל החמוד שלי 💙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a8daff 0%, #c5e3ff 50%, #e0f2ff 100%);
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .main-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+        }
+        
+        .container {
+            text-align: center;
+            position: relative;
+        }
+        
+        .name-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .name-popup.hidden {
+            display: none;
+        }
+        
+        .name-box {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 50px rgba(59, 130, 246, 0.5);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .name-box h2 {
+            color: #3b82f6;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .name-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            border: 3px solid #93c5fd;
+            border-radius: 15px;
+            text-align: center;
+            font-family: 'Comic Sans MS', sans-serif;
+            margin-bottom: 20px;
+        }
+        
+        .name-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .name-box button {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .name-box button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .elephant-container {
+            width: 400px;
+            height: 450px;
+            position: relative;
+            margin: 0 auto;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .body {
+            width: 220px;
+            height: 200px;
+            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+            border-radius: 45% 45% 50% 50%;
+            position: absolute;
+            bottom: 50px;
+            left: 90px;
+            box-shadow: 0 10px 30px rgba(96, 165, 250, 0.4);
+            animation: breathe 3s ease-in-out infinite;
+            z-index: 5;
+        }
+        
+        .body::before {
+            content: '';
+            width: 140px;
+            height: 160px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+            left: 40px;
+        }
+        
+        .head {
+            width: 200px;
+            height: 180px;
+            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 120px;
+            left: 100px;
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.4);
+            animation: headBob 4s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .trunk {
+            width: 40px;
+            height: 140px;
+            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+            position: absolute;
+            bottom: -20px;
+            left: 80px;
+            border-radius: 20px 20px 30px 30px;
+            box-shadow: 0 5px 15px rgba(96, 165, 250, 0.3);
+            animation: trunkSwing 3s ease-in-out infinite;
+            transform-origin: top center;
+            z-index: 5;
+        }
+        
+        .trunk::before {
+            content: '';
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 5px;
+            left: 2.5px;
+        }
+        
+        .trunk::after {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: #60a5fa;
+            position: absolute;
+            top: 30px;
+            left: 5px;
+            border-radius: 2px;
+        }
+        
+        .trunk-line {
+            position: absolute;
+            width: 30px;
+            height: 3px;
+            background: #60a5fa;
+            left: 5px;
+            border-radius: 2px;
+        }
+        
+        .trunk-line:nth-child(1) { top: 50px; }
+        .trunk-line:nth-child(2) { top: 70px; }
+        .trunk-line:nth-child(3) { top: 90px; }
+        
+        .ears {
+            position: absolute;
+            top: 20px;
+            left: -30px;
+            width: 260px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+        
+        .ear {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(96, 165, 250, 0.3);
+            animation: earFlap 4s ease-in-out infinite;
+        }
+        
+        .ear::before {
+            content: '';
+            width: 60px;
+            height: 75px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 15px;
+            left: 10px;
+        }
+        
+        .ear:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .ear:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        
+        .eyes {
+            position: absolute;
+            top: 60px;
+            left: 50px;
+            width: 100px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 12;
+        }
+        
+        .eye {
+            width: 40px;
+            height: 45px;
+            background: #000;
+            border-radius: 50% 50% 48% 48%;
+            position: relative;
+            animation: blink 5s ease-in-out infinite;
+        }
+        
+        .shine {
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+        }
+        
+        .shine-small {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        
+        .eyelash {
+            position: absolute;
+            width: 25px;
+            height: 4px;
+            background: #000;
+            border-radius: 50%;
+            top: -6px;
+            left: 18px;
+            transform: rotate(-30deg);
+        }
+        
+        .eyelash::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 4px;
+            background: #000;
+            border-radius: 50%;
+            top: -4px;
+            left: -6px;
+            transform: rotate(-20deg);
+        }
+        
+        .cheeks {
+            position: absolute;
+            top: 100px;
+            left: 25px;
+            width: 150px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 11;
+        }
+        
+        .cheek {
+            width: 50px;
+            height: 45px;
+            background: radial-gradient(circle, rgba(147, 197, 253, 0.8) 0%, rgba(147, 197, 253, 0) 70%);
+            border-radius: 50%;
+            animation: blush 3s ease-in-out infinite;
+        }
+        
+        .tusks {
+            position: absolute;
+            bottom: 20px;
+            left: 60px;
+            width: 80px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 6;
+        }
+        
+        .tusk {
+            width: 15px;
+            height: 50px;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border-radius: 50% 50% 10px 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transform: rotate(-10deg);
+        }
+        
+        .tusk:nth-child(2) {
+            transform: rotate(10deg);
+        }
+        
+        .mouth {
+            width: 60px;
+            height: 30px;
+            position: absolute;
+            bottom: 40px;
+            left: 70px;
+            transition: all 0.3s ease;
+            z-index: 11;
+        }
+        
+        .mouth-curve {
+            width: 25px;
+            height: 15px;
+            border: 3px solid #60a5fa;
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+        
+        .mouth-curve:nth-child(1) {
+            left: 0;
+        }
+        
+        .mouth-curve:nth-child(2) {
+            right: 0;
+        }
+        
+        .mouth.happy .mouth-curve {
+            animation: smile 0.5s ease-in-out;
+        }
+        
+        .mouth.open {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .mouth.open .mouth-curve {
+            height: 25px;
+            border-width: 4px;
+        }
+        
+        .legs {
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            width: 180px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 6;
+        }
+        
+        .leg {
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(180deg, #93c5fd 0%, #60a5fa 100%);
+            border-radius: 10px 10px 20px 20px;
+            position: relative;
+        }
+        
+        .foot {
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -8px;
+            left: -5px;
+            box-shadow: 0 3px 10px rgba(96, 165, 250, 0.3);
+        }
+        
+        .foot::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 3px;
+            background: #93c5fd;
+            bottom: 8px;
+            left: 7.5px;
+            border-radius: 2px;
+        }
+        
+        .tail {
+            position: absolute;
+            bottom: 80px;
+            right: 80px;
+            width: 50px;
+            height: 80px;
+            z-index: 1;
+        }
+        
+        .tail-base {
+            width: 15px;
+            height: 60px;
+            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+            border-radius: 10px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            animation: tailWag 2.5s ease-in-out infinite;
+            transform-origin: top center;
+            box-shadow: 0 3px 10px rgba(96, 165, 250, 0.3);
+        }
+        
+        .tail-tuft {
+            position: absolute;
+            bottom: -5px;
+            left: -8px;
+            width: 30px;
+            height: 20px;
+        }
+        
+        .tail-hair {
+            position: absolute;
+            width: 8px;
+            height: 18px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+        
+        .tail-hair:nth-child(1) { left: 0; }
+        .tail-hair:nth-child(2) { left: 8px; }
+        .tail-hair:nth-child(3) { left: 16px; }
+        .tail-hair:nth-child(4) { left: 22px; }
+        
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: floatHeart 2s ease-out forwards;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        .petting-hand {
+            position: absolute;
+            font-size: 60px;
+            top: -50px;
+            left: 150px;
+            opacity: 0;
+            transform: rotate(-30deg);
+            pointer-events: none;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            z-index: 100;
+        }
+        
+        .petting-hand.active {
+            animation: petAnimationElephant 2s ease-in-out;
+        }
+        
+        .food {
+            position: absolute;
+            font-size: 50px;
+            top: 260px;
+            left: 175px;
+            opacity: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            z-index: 20;
+        }
+        
+        .food.flying {
+            animation: foodFlyElephant 1s ease-in-out forwards;
+        }
+        
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        
+        .btn-feed {
+            background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%);
+            color: white;
+        }
+        
+        .btn-pet {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0) scale(1);
+        }
+        
+        .title {
+            color: #3b82f6;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(59, 130, 246, 0.3);
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .title:hover {
+            transform: scale(1.05);
+        }
+        
+        .status {
+            color: #3b82f6;
+            font-size: 24px;
+            margin-top: 25px;
+            height: 35px;
+            text-shadow: 2px 2px 4px rgba(59, 130, 246, 0.3);
+            font-weight: bold;
+        }
+        
+        .love-meter-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            min-width: 220px;
+        }
+        
+        .love-meter-title {
+            color: #3b82f6;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .love-bar-container {
+            width: 100%;
+            height: 30px;
+            background: #dbeafe;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #93c5fd;
+            position: relative;
+        }
+        
+        .love-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #93c5fd 0%, #3b82f6 100%);
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .love-percentage {
+            color: #3b82f6;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .love-status {
+            color: #93c5fd;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: center;
+            height: 20px;
+        }
+        
+        .last-interaction {
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            color: #fbbf24;
+            font-size: 20px;
+            animation: sparkle 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .water-spray {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .water-spray.active {
+            animation: waterSpray 1.5s ease-out forwards;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        
+        @keyframes headBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes headExcited {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-15px) scale(1.05); }
+            50% { transform: translateY(-20px) scale(1.08); }
+            75% { transform: translateY(-15px) scale(1.05); }
+        }
+        
+        @keyframes bodyJump {
+            0%, 100% { transform: translateY(0) scale(1); }
+            30% { transform: translateY(-10px) scale(1.02); }
+            60% { transform: translateY(-15px) scale(1.03); }
+        }
+        
+        @keyframes trunkSwing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        @keyframes trunkSwingFast {
+            0% { transform: rotate(-5deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-5deg); }
+            75% { transform: rotate(15deg); }
+            100% { transform: rotate(-5deg); }
+        }
+        
+        @keyframes trunkRaise {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(-45deg); }
+        }
+        
+        @keyframes earFlap {
+            0%, 90%, 100% { transform: scaleX(1); }
+            93%, 97% { transform: scaleX(1.1); }
+            95% { transform: scaleX(0.95); }
+        }
+        
+        @keyframes earFlapFast {
+            0%, 100% { transform: scaleX(1); }
+            25% { transform: scaleX(1.15); }
+            50% { transform: scaleX(0.9); }
+            75% { transform: scaleX(1.15); }
+        }
+        
+        @keyframes tailWag {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+        }
+        
+        @keyframes tailWagFast {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(25deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(25deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes blink {
+            0%, 94%, 100% { transform: scaleY(1); }
+            95%, 97% { transform: scaleY(0.1); }
+        }
+        
+        @keyframes eyesHappy {
+            0%, 100% { transform: scaleY(0.6) scaleX(1.2); }
+        }
+        
+        @keyframes blush {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes smile {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes floatHeart {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(0, -50px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(0, -100px) scale(0.5);
+            }
+        }
+        
+        @keyframes foodFlyElephant {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(-20px, -50px) rotate(180deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-30px, -80px) rotate(360deg) scale(0.5);
+            }
+        }
+        
+        @keyframes petAnimationElephant {
+            0% {
+                opacity: 0;
+                top: -80px;
+                left: 100px;
+                transform: rotate(-30deg) scale(0.8);
+            }
+            20% {
+                opacity: 1;
+                top: 70px;
+                left: 130px;
+                transform: rotate(-20deg) scale(1);
+            }
+            40% {
+                top: 80px;
+                left: 140px;
+                transform: rotate(-15deg) scale(1.05);
+            }
+            50% {
+                top: 75px;
+                left: 135px;
+                transform: rotate(-18deg) scale(1.05);
+            }
+            60% {
+                top: 80px;
+                left: 140px;
+                transform: rotate(-15deg) scale(1.05);
+            }
+            70% {
+                top: 75px;
+                left: 135px;
+                transform: rotate(-18deg) scale(1.05);
+            }
+            80% {
+                opacity: 1;
+                top: 80px;
+                left: 140px;
+                transform: rotate(-15deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                top: -80px;
+                left: 100px;
+                transform: rotate(-30deg) scale(0.8);
+            }
+        }
+        
+        @keyframes waterSpray {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.5);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-30px, -50px) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-60px, -80px) scale(0.8);
+            }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="name-popup" id="namePopup">
+        <div class="name-box">
+            <h2>איזה שם תרצה לתת לפיל שלך 🐘💙</h2>
+            <input type="text" id="elephantNameInput" placeholder="הקלד שם..." maxlength="15">
+            <button onclick="saveElephantName()">שמור 💙</button>
+        </div>
+    </div>
+    
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="title" id="elephantTitle" onclick="changeName()">🐘 הפיל החמוד שלי 💙</div>
+            
+            <div class="elephant-container" id="elephantContainer">
+                <div class="tail">
+                    <div class="tail-base">
+                        <div class="tail-tuft">
+                            <div class="tail-hair"></div>
+                            <div class="tail-hair"></div>
+                            <div class="tail-hair"></div>
+                            <div class="tail-hair"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="body">
+                    <div class="legs">
+                        <div class="leg"><div class="foot"></div></div>
+                        <div class="leg"><div class="foot"></div></div>
+                        <div class="leg"><div class="foot"></div></div>
+                        <div class="leg"><div class="foot"></div></div>
+                    </div>
+                </div>
+                
+                <div class="head">
+                    <div class="ears">
+                        <div class="ear"></div>
+                        <div class="ear"></div>
+                    </div>
+                    
+                    <div class="trunk">
+                        <div class="trunk-line"></div>
+                        <div class="trunk-line"></div>
+                        <div class="trunk-line"></div>
+                    </div>
+                    
+                    <div class="tusks">
+                        <div class="tusk"></div>
+                        <div class="tusk"></div>
+                    </div>
+                    
+                    <div class="eyes">
+                        <div class="eye">
+                            <div class="shine"></div>
+                            <div class="shine-small"></div>
+                            <div class="eyelash"></div>
+                        </div>
+                        <div class="eye">
+                            <div class="shine"></div>
+                            <div class="shine-small"></div>
+                            <div class="eyelash"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="cheeks">
+                        <div class="cheek"></div>
+                        <div class="cheek"></div>
+                    </div>
+                    
+                    <div class="mouth" id="mouth">
+                        <div class="mouth-curve"></div>
+                        <div class="mouth-curve"></div>
+                    </div>
+                </div>
+                
+                <div class="food" id="food">🌾</div>
+                <div class="petting-hand" id="pettingHand">✋</div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-feed" onclick="feedElephant()">🌾 האכל</button>
+                <button class="btn btn-pet" onclick="petElephant()">💙 ללטף</button>
+            </div>
+            
+            <div class="status" id="status"></div>
+        </div>
+        
+        <div class="love-meter-container">
+            <div class="love-meter-title">💙 מד אהבה</div>
+            <div class="love-bar-container">
+                <div class="love-bar" id="loveBar"></div>
+            </div>
+            <div class="love-percentage" id="lovePercentage">75%</div>
+            <div class="love-status" id="loveStatus">שמח 😊</div>
+            <div class="last-interaction" id="lastInteraction">לחץ כדי לטפל בפיל</div>
+        </div>
+    </div>
+
+    <script>
+        let isFeeding = false;
+        let meals = 0;
+        let pets = 0;
+        let loveLevel = 75;
+        let lastInteractionTime = Date.now();
+        let elephantName = '';
+        
+        const petAudioElement = new Audio();
+        petAudioElement.src = 'https://files.catbox.moe/fly8yz.mp3';
+        petAudioElement.volume = 0.6;
+        petAudioElement.preload = 'auto';
+        
+        petAudioElement.addEventListener('canplaythrough', function() {
+            console.log('Pet sound loaded successfully!');
+        });
+        
+        petAudioElement.addEventListener('error', function(e) {
+            console.log('Pet sound loading error:', e);
+        });
+        
+        if (localStorage.getItem('elephantName')) {
+            elephantName = localStorage.getItem('elephantName');
+            document.getElementById('elephantTitle').textContent = `🐘 ${elephantName} 💙`;
+            document.getElementById('namePopup').classList.add('hidden');
+        } else {
+            setTimeout(() => {
+                document.getElementById('elephantNameInput').focus();
+            }, 500);
+        }
+        
+        function saveElephantName() {
+            const input = document.getElementById('elephantNameInput').value.trim();
+            if (input) {
+                elephantName = input;
+                localStorage.setItem('elephantName', elephantName);
+                document.getElementById('elephantTitle').textContent = `🐘 ${elephantName} 💙`;
+                document.getElementById('namePopup').classList.add('hidden');
+            }
+        }
+        
+        function changeName() {
+            document.getElementById('namePopup').classList.remove('hidden');
+            document.getElementById('elephantNameInput').value = elephantName;
+            document.getElementById('elephantNameInput').focus();
+        }
+        
+        document.getElementById('elephantNameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                saveElephantName();
+            }
+        });
+        
+        function updateLoveDisplay() {
+            const loveBar = document.getElementById('loveBar');
+            const lovePercentage = document.getElementById('lovePercentage');
+            const loveStatus = document.getElementById('loveStatus');
+            
+            loveBar.style.width = loveLevel + '%';
+            lovePercentage.textContent = loveLevel + '%';
+            
+            if (loveLevel >= 90) {
+                loveStatus.textContent = 'מאושר מאוד 🐘💙';
+                loveBar.style.background = 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%)';
+            } else if (loveLevel >= 70) {
+                loveStatus.textContent = 'שמח 😊';
+                loveBar.style.background = 'linear-gradient(90deg, #93c5fd 0%, #3b82f6 100%)';
+            } else if (loveLevel >= 50) {
+                loveStatus.textContent = 'בסדר 🙂';
+                loveBar.style.background = 'linear-gradient(90deg, #bfdbfe 0%, #93c5fd 100%)';
+            } else if (loveLevel >= 30) {
+                loveStatus.textContent = 'עצוב 😔';
+                loveBar.style.background = 'linear-gradient(90deg, #dbeafe 0%, #bfdbfe 100%)';
+            } else {
+                loveStatus.textContent = 'זקוק לתשומת לב 😢';
+                loveBar.style.background = 'linear-gradient(90deg, #ddd 0%, #dbeafe 100%)';
+            }
+            
+            localStorage.setItem('elephantLoveLevel', loveLevel);
+            localStorage.setItem('elephantLastInteraction', lastInteractionTime);
+        }
+        
+        function updateLastInteraction() {
+            lastInteractionTime = Date.now();
+            const lastInteractionEl = document.getElementById('lastInteraction');
+            lastInteractionEl.textContent = 'זה עתה טיפלת בפיל 💙';
+            setTimeout(() => updateTimeDisplay(), 3000);
+        }
+        
+        function updateTimeDisplay() {
+            const lastInteractionEl = document.getElementById('lastInteraction');
+            const now = Date.now();
+            const diff = now - lastInteractionTime;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) {
+                lastInteractionEl.textContent = `לפני ${days} ימים`;
+            } else if (hours > 0) {
+                lastInteractionEl.textContent = `לפני ${hours} שעות`;
+            } else if (minutes > 0) {
+                lastInteractionEl.textContent = `לפני ${minutes} דקות`;
+            } else {
+                lastInteractionEl.textContent = 'זה עתה';
+            }
+        }
+        
+        setInterval(() => {
+            const now = Date.now();
+            const hoursPassed = (now - lastInteractionTime) / (1000 * 60 * 60);
+            
+            if (hoursPassed >= 2 && loveLevel > 0) {
+                const decreaseAmount = Math.floor(hoursPassed / 2);
+                loveLevel = Math.max(0, loveLevel - decreaseAmount);
+                lastInteractionTime = now - (hoursPassed % 2) * 2 * 60 * 60 * 1000;
+                updateLoveDisplay();
+            }
+            
+            updateTimeDisplay();
+        }, 60000);
+        
+        updateLoveDisplay();
+        updateTimeDisplay();
+        
+        function trunkSpray() {
+            const trunk = document.querySelector('.trunk');
+            const container = document.getElementById('elephantContainer');
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const spray = document.createElement('div');
+                    spray.className = 'water-spray';
+                    spray.textContent = '💧';
+                    spray.style.left = '140px';
+                    spray.style.top = '260px';
+                    spray.classList.add('active');
+                    container.appendChild(spray);
+                    
+                    setTimeout(() => {
+                        spray.remove();
+                    }, 1500);
+                }, i * 200);
+            }
+        }
+        
+        function feedElephant() {
+            if (isFeeding) return;
+            isFeeding = true;
+            
+            const mouth = document.getElementById('mouth');
+            const food = document.getElementById('food');
+            const status = document.getElementById('status');
+            const head = document.querySelector('.head');
+            const body = document.querySelector('.body');
+            const trunk = document.querySelector('.trunk');
+            const tail = document.querySelector('.tail-base');
+            const ears = document.querySelectorAll('.ear');
+            const eyes = document.querySelectorAll('.eye');
+            
+            loveLevel = Math.min(100, loveLevel + 8);
+            updateLoveDisplay();
+            updateLastInteraction();
+            
+            food.classList.add('flying');
+            trunk.style.animation = 'trunkRaise 1s ease-in-out';
+            tail.style.animation = 'tailWagFast 0.4s ease-in-out infinite';
+            
+            ears.forEach(ear => {
+                ear.style.animation = 'earFlapFast 0.5s ease-in-out infinite';
+            });
+            
+            setTimeout(() => {
+                const eatAudio = new Audio('https://files.catbox.moe/4tz9mk.mp3');
+                eatAudio.volume = 0.5;
+                eatAudio.play().catch(err => console.log('Sound error:', err));
+                
+                mouth.classList.add('happy');
+                head.style.animation = 'headExcited 0.8s ease-in-out';
+            }, 600);
+            
+            setTimeout(() => {
+                food.classList.remove('flying');
+                
+                eyes.forEach(eye => {
+                    eye.style.animation = 'eyesHappy 0.5s ease-in-out';
+                });
+                
+                body.style.animation = 'bodyJump 0.6s ease-in-out';
+                trunkSpray();
+                meals++;
+                
+                const messages = [
+                    'ממ כמה טעים 🌾',
+                    'תודה רבה 💙',
+                    'וואו מעולה ✨',
+                    'אני אוהב אותך 🌟',
+                    'איזה כיף 🐘',
+                    'עוד בבקשה 💙'
+                ];
+                
+                status.textContent = messages[meals % messages.length];
+                createSparkles();
+                
+                setTimeout(() => {
+                    status.textContent = '';
+                    mouth.classList.remove('happy');
+                    isFeeding = false;
+                    
+                    head.style.animation = 'headBob 4s ease-in-out infinite';
+                    body.style.animation = 'breathe 3s ease-in-out infinite';
+                    trunk.style.animation = 'trunkSwing 3s ease-in-out infinite';
+                    tail.style.animation = 'tailWag 2.5s ease-in-out infinite';
+                    ears.forEach(ear => {
+                        ear.style.animation = 'earFlap 4s ease-in-out infinite';
+                    });
+                    eyes.forEach(eye => {
+                        eye.style.animation = 'blink 5s ease-in-out infinite';
+                    });
+                }, 2500);
+            }, 1500);
+        }
+        
+        function petElephant() {
+            const status = document.getElementById('status');
+            const elephantContainer = document.getElementById('elephantContainer');
+            const pettingHand = document.getElementById('pettingHand');
+            const head = document.querySelector('.head');
+            const eyes = document.querySelectorAll('.eye');
+            const trunk = document.querySelector('.trunk');
+            const tail = document.querySelector('.tail-base');
+            const cheeks = document.querySelectorAll('.cheek');
+            const ears = document.querySelectorAll('.ear');
+            
+            loveLevel = Math.min(100, loveLevel + 5);
+            updateLoveDisplay();
+            updateLastInteraction();
+            pets++;
+            
+            petAudioElement.currentTime = 0;
+            petAudioElement.play().catch(err => console.log('Pet sound error:', err));
+            
+            pettingHand.classList.add('active');
+            
+            head.style.animation = 'none';
+            head.style.transform = 'translateY(-8px)';
+            
+            eyes.forEach(eye => {
+                eye.style.animation = 'eyesHappy 0.8s ease-in-out';
+                eye.style.transform = 'scaleY(0.7) scaleX(1.1)';
+            });
+            
+            trunk.style.animation = 'trunkSwingFast 0.4s ease-in-out 5';
+            tail.style.animation = 'tailWagFast 0.4s ease-in-out 5';
+            
+            cheeks.forEach(cheek => {
+                cheek.style.opacity = '1';
+                cheek.style.transform = 'scale(1.3)';
+            });
+            
+            ears.forEach(ear => {
+                ear.style.animation = 'earFlapFast 0.4s ease-in-out 5';
+            });
+            
+            setTimeout(() => {
+                pettingHand.classList.remove('active');
+                
+                setTimeout(() => {
+                    head.style.animation = 'headBob 4s ease-in-out infinite';
+                    head.style.transform = '';
+                    eyes.forEach(eye => {
+                        eye.style.animation = 'blink 5s ease-in-out infinite';
+                        eye.style.transform = '';
+                    });
+                    trunk.style.animation = 'trunkSwing 3s ease-in-out infinite';
+                    tail.style.animation = 'tailWag 2.5s ease-in-out infinite';
+                    cheeks.forEach(cheek => {
+                        cheek.style.opacity = '';
+                        cheek.style.transform = '';
+                    });
+                    ears.forEach(ear => {
+                        ear.style.animation = 'earFlap 4s ease-in-out infinite';
+                    });
+                }, 500);
+            }, 2000);
+            
+            createHearts(elephantContainer);
+            
+            const petMessages = [
+                'כל כך נחמד~ 💙',
+                'כל כך שמח 🐘',
+                'יופי~ ✨',
+                'אוהב אותך 💕',
+                'מרגיש מעולה~ 🌟',
+                'עוד בבקשה 💙',
+                'יאיי 💗'
+            ];
+            
+            status.textContent = petMessages[pets % petMessages.length];
+            setTimeout(() => {
+                status.textContent = '';
+            }, 2000);
+        }
+        
+        function createHearts(container) {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = ['💙', '💖', '💗', '💝', '✨'][Math.floor(Math.random() * 5)];
+                    heart.style.left = (Math.random() * 300 + 50) + 'px';
+                    heart.style.top = (Math.random() * 200 + 100) + 'px';
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+        
+        function createSparkles() {
+            const container = document.querySelector('.elephant-container');
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.textContent = '✨';
+                    sparkle.style.left = (Math.random() * 350 + 25) + 'px';
+                    sparkle.style.top = (Math.random() * 350 + 25) + 'px';
+                    sparkle.style.animationDelay = (Math.random() * 0.5) + 's';
+                    container.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, i * 80);
+            }
+        }
+        
+        document.getElementById('elephantContainer').addEventListener('click', function(e) {
+            if (e.target === this || e.target.closest('.head, .body, .trunk, .ears')) {
+                petElephant();
+            }
+        });
+        
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = ['✨', '💙', '🐘'][Math.floor(Math.random() * 3)];
+                sparkle.style.left = (Math.random() * window.innerWidth) + 'px';
+                sparkle.style.top = (Math.random() * window.innerHeight) + 'px';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 2000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
