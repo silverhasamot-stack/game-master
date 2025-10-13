@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>למד לצייר צעד אחר צעד</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .title {
+            text-align: center;
+            color: #333;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .canvas-container {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .canvas-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        canvas {
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            cursor: crosshair;
+            display: block;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .controls {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .control-section {
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .instruction-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .step-counter {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            justify-items: center;
+        }
+        
+        .color-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .color-btn.selected {
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            transform: scale(1.2);
+        }
+        
+        .tool-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .tool-btn {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s;
+        }
+        
+        .tool-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .tool-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .drawing-menu {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .drawing-menu.hidden {
+            display: none;
+        }
+        
+        .menu-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .drawing-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .drawing-option {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        
+        .drawing-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+        
+        .drawing-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .drawing-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .overlay.hidden {
+            display: none;
+        }
+        
+        .size-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="drawing-menu" id="drawingMenu">
+        <div class="menu-title">🎨 בחר מה לצייר</div>
+        <div class="drawing-options">
+            <div class="drawing-option" onclick="selectDrawing('fish')">
+                <div class="drawing-icon">🐟</div>
+                <div class="drawing-name">דג</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('flower')">
+                <div class="drawing-icon">🌸</div>
+                <div class="drawing-name">פרח</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('house')">
+                <div class="drawing-icon">🏠</div>
+                <div class="drawing-name">בית</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('car')">
+                <div class="drawing-icon">🚗</div>
+                <div class="drawing-name">מכונית</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('face')">
+                <div class="drawing-icon">😊</div>
+                <div class="drawing-name">פרצוף</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('butterfly')">
+                <div class="drawing-icon">🦋</div>
+                <div class="drawing-name">פרפר</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('tree')">
+                <div class="drawing-icon">🌳</div>
+                <div class="drawing-name">עץ</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('star')">
+                <div class="drawing-icon">⭐</div>
+                <div class="drawing-name">כוכב</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('cat')">
+                <div class="drawing-icon">🐱</div>
+                <div class="drawing-name">חתול</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('sun')">
+                <div class="drawing-icon">🌞</div>
+                <div class="drawing-name">שמש</div>
+            </div>
+            <div class="drawing-option" onclick="selectDrawing('rocket')">
+                <div class="drawing-icon">🚀</div>
+                <div class="drawing-name">רקטה</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="title">🎨 למד לצייר צעד אחר צעד 🖌️</div>
+    
+    <div class="main-container">
+        <div class="canvas-container">
+            <div class="canvas-title">הדוגמה - עקוב אחרי השלבים 👀</div>
+            <canvas id="exampleCanvas" width="400" height="400"></canvas>
+        </div>
+        
+        <div class="controls">
+            <div class="control-section">
+                <div class="instruction-box" id="instruction">בחר ציור מהתפריט כדי להתחיל!</div>
+                <div class="step-counter" id="stepCounter"></div>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">כלים 🛠️</div>
+                <div class="tool-buttons">
+                    <button class="tool-btn active" id="drawBtn" onclick="selectDrawTool()">✏️ עט</button>
+                    <button class="tool-btn" id="eraserBtn" onclick="selectEraser()">🧹 מחק</button>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">צבעים 🎨</div>
+                <div class="color-palette" id="colorPalette"></div>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">עובי מכחול</div>
+                <input type="range" class="size-slider" id="brushSize" min="2" max="15" value="5">
+            </div>
+            
+            <div class="control-section">
+                <div class="nav-buttons">
+                    <button class="button" id="prevBtn" onclick="prevStep()" disabled>⏮️ קודם</button>
+                    <button class="button" id="nextBtn" onclick="nextStep()" disabled>הבא ⏭️</button>
+                </div>
+            </div>
+            
+            <button class="button" onclick="clearMyCanvas()">🗑️ נקה את הציור שלי</button>
+            <button class="button" onclick="showMenu()">🎨 בחר ציור אחר</button>
+        </div>
+        
+        <div class="canvas-container">
+            <div class="canvas-title">הציור שלך - צייר כאן! ✏️</div>
+            <canvas id="myCanvas" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const exampleCanvas = document.getElementById('exampleCanvas');
+        const myCanvas = document.getElementById('myCanvas');
+        const exampleCtx = exampleCanvas.getContext('2d');
+        const myCtx = myCanvas.getContext('2d');
+        
+        let currentDrawing = null;
+        let currentStep = 0;
+        let isDrawing = false;
+        let currentColor = '#000000';
+        let brushSize = 5;
+        
+        const colors = [
+            '#000000', // שחור
+            '#FFFFFF', // לבן
+            '#FF0000', // אדום
+            '#00FF00', // ירוק
+            '#0000FF', // כחול
+            '#FFFF00', // צהוב
+            '#FFA500', // כתום
+            '#800080', // סגול
+            '#FF00FF', // מגנטה
+            '#00FFFF', // ציאן
+            '#FFC0CB', // ורוד בהיר
+            '#00BFFF', // כחול בהיר (דג)
+            '#87CEEB', // תכלת (בית, מכונית)
+            '#FFD700', // זהב (פרח, פרפר)
+            '#FF69B4', // ורוד (פרח)
+            '#FF1493', // ורוד כהה (פרפר)
+            '#8B4513', // חום (בית, פרפר)
+            '#FFE4B5', // בז' (בית)
+            '#FFDAB9', // אפרסק (פרצוף)
+            '#8B0000'  // אדום כהה (בית)
+        ];
+        
+        let eraserMode = false;
+        
+        const drawings = {
+            fish: {
+                name: 'דג',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר עיגול גדול לגוף הדג',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 80, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר משולש לזנב בצד שמאל',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(120, 200);
+                            ctx.lineTo(60, 170);
+                            ctx.lineTo(60, 230);
+                            ctx.closePath();
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר עיגול קטן לעין',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(230, 180, 10, 0, Math.PI * 2);
+                            ctx.fillStyle = '#000000';
+                            ctx.fill();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר קו מעוקל לפה מחייך',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(220, 200, 20, 0, Math.PI);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הדג בצבע כחול!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#00BFFF';
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 78, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Redraw all details
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 80, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(120, 200);
+                            ctx.lineTo(60, 170);
+                            ctx.lineTo(60, 230);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(230, 180, 10, 0, Math.PI * 2);
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(230, 180, 5, 0, Math.PI * 2);
+                            ctx.fillStyle = '#000000';
+                            ctx.fill();
+                            // Add the smile!
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(220, 200, 20, 0, Math.PI);
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            tree: {
+                name: 'עץ',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר 2 קווים אנכיים לגזע העץ',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.moveTo(180, 280);
+                            ctx.lineTo(180, 180);
+                            ctx.moveTo(220, 280);
+                            ctx.lineTo(220, 180);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר קו רוחב למטה לחבר את הגזע',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(180, 280);
+                            ctx.lineTo(220, 280);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר עיגול גדול למעלה לעלים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(200, 130, 70, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר קווים קטנים בגזע למרקם עץ',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(180, 220);
+                            ctx.lineTo(190, 225);
+                            ctx.moveTo(180, 240);
+                            ctx.lineTo(185, 243);
+                            ctx.moveTo(220, 200);
+                            ctx.lineTo(210, 205);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את העץ - חום וירוק!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#8B4513';
+                            ctx.fillRect(181, 181, 38, 99);
+                            ctx.fillStyle = '#00FF00';
+                            ctx.beginPath();
+                            ctx.arc(200, 130, 68, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.moveTo(180, 280);
+                            ctx.lineTo(180, 180);
+                            ctx.moveTo(220, 280);
+                            ctx.lineTo(220, 180);
+                            ctx.moveTo(180, 280);
+                            ctx.lineTo(220, 280);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(200, 130, 70, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(180, 220);
+                            ctx.lineTo(190, 225);
+                            ctx.moveTo(180, 240);
+                            ctx.lineTo(185, 243);
+                            ctx.moveTo(220, 200);
+                            ctx.lineTo(210, 205);
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            star: {
+                name: 'כוכב',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר קו אנכי ארוך למעלה',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.moveTo(200, 300);
+                            ctx.lineTo(200, 100);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר קו אלכסוני לצד ימין למטה',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(200, 100);
+                            ctx.lineTo(280, 240);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר קו רוחב לצד שמאל',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(280, 240);
+                            ctx.lineTo(120, 180);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר קו רוחב לצד ימין וסגור את הכוכב',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(120, 180);
+                            ctx.lineTo(280, 180);
+                            ctx.lineTo(140, 240);
+                            ctx.lineTo(200, 100);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הכוכב בצהוב זהב!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            ctx.moveTo(200, 100);
+                            ctx.lineTo(220, 170);
+                            ctx.lineTo(290, 180);
+                            ctx.lineTo(230, 225);
+                            ctx.lineTo(250, 290);
+                            ctx.lineTo(200, 250);
+                            ctx.lineTo(150, 290);
+                            ctx.lineTo(170, 225);
+                            ctx.lineTo(110, 180);
+                            ctx.lineTo(180, 170);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            cat: {
+                name: 'חתול',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר עיגול גדול לראש',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 80, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר 2 משולשים למעלה לאוזניים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(150, 150);
+                            ctx.lineTo(130, 100);
+                            ctx.lineTo(170, 130);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(250, 150);
+                            ctx.lineTo(270, 100);
+                            ctx.lineTo(230, 130);
+                            ctx.closePath();
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר 2 עיגולים לעיניים ומשולש לאף',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(180, 190, 10, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(220, 190, 10, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(200, 210);
+                            ctx.lineTo(195, 220);
+                            ctx.lineTo(205, 220);
+                            ctx.closePath();
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר חיוך ושפם',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(200, 220, 20, 0, Math.PI);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(200, 220);
+                            ctx.lineTo(200, 230);
+                            ctx.stroke();
+                            // Whiskers
+                            ctx.beginPath();
+                            ctx.moveTo(150, 200);
+                            ctx.lineTo(120, 195);
+                            ctx.moveTo(150, 210);
+                            ctx.lineTo(120, 210);
+                            ctx.moveTo(250, 200);
+                            ctx.lineTo(280, 195);
+                            ctx.moveTo(250, 210);
+                            ctx.lineTo(280, 210);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את החתול!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FFA500';
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 78, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(150, 150);
+                            ctx.lineTo(130, 100);
+                            ctx.lineTo(170, 130);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(250, 150);
+                            ctx.lineTo(270, 100);
+                            ctx.lineTo(230, 130);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 80, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(150, 150);
+                            ctx.lineTo(130, 100);
+                            ctx.lineTo(170, 130);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(250, 150);
+                            ctx.lineTo(270, 100);
+                            ctx.lineTo(230, 130);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.fillStyle = '#000000';
+                            ctx.beginPath();
+                            ctx.arc(180, 190, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(220, 190, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(200, 210);
+                            ctx.lineTo(195, 220);
+                            ctx.lineTo(205, 220);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(200, 220, 20, 0, Math.PI);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(200, 220);
+                            ctx.lineTo(200, 230);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(150, 200);
+                            ctx.lineTo(120, 195);
+                            ctx.moveTo(150, 210);
+                            ctx.lineTo(120, 210);
+                            ctx.moveTo(250, 200);
+                            ctx.lineTo(280, 195);
+                            ctx.moveTo(250, 210);
+                            ctx.lineTo(280, 210);
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            sun: {
+                name: 'שמש',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר עיגול גדול למרכז השמש',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 60, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר 4 קווים ארוכים למעלה, למטה וצדדים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(200, 140);
+                            ctx.lineTo(200, 80);
+                            ctx.moveTo(200, 260);
+                            ctx.lineTo(200, 320);
+                            ctx.moveTo(140, 200);
+                            ctx.lineTo(80, 200);
+                            ctx.moveTo(260, 200);
+                            ctx.lineTo(320, 200);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר 4 קווים אלכסוניים בפינות',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(245, 155);
+                            ctx.lineTo(280, 120);
+                            ctx.moveTo(245, 245);
+                            ctx.lineTo(280, 280);
+                            ctx.moveTo(155, 155);
+                            ctx.lineTo(120, 120);
+                            ctx.moveTo(155, 245);
+                            ctx.lineTo(120, 280);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר פנים מחייכות לשמש',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#000000';
+                            ctx.beginPath();
+                            ctx.arc(185, 190, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(215, 190, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 205, 25, 0, Math.PI);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את השמש בצהוב זהב!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 58, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 60, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(200, 140);
+                            ctx.lineTo(200, 80);
+                            ctx.moveTo(200, 260);
+                            ctx.lineTo(200, 320);
+                            ctx.moveTo(140, 200);
+                            ctx.lineTo(80, 200);
+                            ctx.moveTo(260, 200);
+                            ctx.lineTo(320, 200);
+                            ctx.moveTo(245, 155);
+                            ctx.lineTo(280, 120);
+                            ctx.moveTo(245, 245);
+                            ctx.lineTo(280, 280);
+                            ctx.moveTo(155, 155);
+                            ctx.lineTo(120, 120);
+                            ctx.moveTo(155, 245);
+                            ctx.lineTo(120, 280);
+                            ctx.stroke();
+                            ctx.fillStyle = '#000000';
+                            ctx.beginPath();
+                            ctx.arc(185, 190, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(215, 190, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(200, 205, 25, 0, Math.PI);
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            rocket: {
+                name: 'רקטה',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר מלבן ארוך לגוף הרקטה',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(170, 180, 60, 120);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר משולש למעלה לחרוט',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(200, 120);
+                            ctx.lineTo(170, 180);
+                            ctx.lineTo(230, 180);
+                            ctx.closePath();
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר 2 משולשים בצדדים לכנפיים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(170, 250);
+                            ctx.lineTo(140, 300);
+                            ctx.lineTo(170, 300);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(230, 250);
+                            ctx.lineTo(260, 300);
+                            ctx.lineTo(230, 300);
+                            ctx.closePath();
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר עיגול לחלון ומלבן קטן לדלת',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(200, 220, 15, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.strokeRect(185, 260, 30, 30);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הרקטה!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FF0000';
+                            ctx.fillRect(171, 181, 58, 118);
+                            ctx.fillStyle = '#0000FF';
+                            ctx.beginPath();
+                            ctx.moveTo(200, 120);
+                            ctx.lineTo(170, 180);
+                            ctx.lineTo(230, 180);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.fillStyle = '#FFA500';
+                            ctx.beginPath();
+                            ctx.moveTo(170, 250);
+                            ctx.lineTo(140, 300);
+                            ctx.lineTo(170, 300);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.moveTo(230, 250);
+                            ctx.lineTo(260, 300);
+                            ctx.lineTo(230, 300);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.fillStyle = '#87CEEB';
+                            ctx.beginPath();
+                            ctx.arc(200, 220, 13, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(170, 180, 60, 120);
+                            ctx.beginPath();
+                            ctx.moveTo(200, 120);
+                            ctx.lineTo(170, 180);
+                            ctx.lineTo(230, 180);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(170, 250);
+                            ctx.lineTo(140, 300);
+                            ctx.lineTo(170, 300);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(230, 250);
+                            ctx.lineTo(260, 300);
+                            ctx.lineTo(230, 300);
+                            ctx.closePath();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(200, 220, 15, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.strokeRect(185, 260, 30, 30);
+                        }
+                    }
+                ]
+            },
+            flower: {
+                name: 'פרח',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר עיגול קטן באמצע למרכז הפרח',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 20, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר 5 עיגולים מסביב לעלי כותרת',
+                        draw: (ctx) => {
+                            const angles = [0, 72, 144, 216, 288];
+                            angles.forEach(angle => {
+                                const rad = angle * Math.PI / 180;
+                                const x = 200 + Math.cos(rad) * 50;
+                                const y = 200 + Math.sin(rad) * 50;
+                                ctx.beginPath();
+                                ctx.arc(x, y, 25, 0, Math.PI * 2);
+                                ctx.stroke();
+                            });
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר קו ארוך למטה לגבעול',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(200, 220);
+                            ctx.lineTo(200, 350);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר 2 עלים בצדדים של הגבעול',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.ellipse(170, 280, 20, 35, -Math.PI / 6, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.ellipse(230, 300, 20, 35, Math.PI / 6, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הפרח בצבעים יפים!',
+                        draw: (ctx) => {
+                            // Color petals
+                            const angles = [0, 72, 144, 216, 288];
+                            ctx.fillStyle = '#FF69B4';
+                            angles.forEach(angle => {
+                                const rad = angle * Math.PI / 180;
+                                const x = 200 + Math.cos(rad) * 50;
+                                const y = 200 + Math.sin(rad) * 50;
+                                ctx.beginPath();
+                                ctx.arc(x, y, 25, 0, Math.PI * 2);
+                                ctx.fill();
+                                ctx.stroke();
+                            });
+                            // Color center
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 20, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            // Color leaves
+                            ctx.fillStyle = '#00FF00';
+                            ctx.beginPath();
+                            ctx.ellipse(170, 280, 20, 35, -Math.PI / 6, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.ellipse(230, 300, 20, 35, Math.PI / 6, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            house: {
+                name: 'בית',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר ריבוע גדול לבית',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(120, 200, 160, 140);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר משולש למעלה לגג',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(200, 120);
+                            ctx.lineTo(110, 200);
+                            ctx.lineTo(290, 200);
+                            ctx.closePath();
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר ריבוע קטן לדלת',
+                        draw: (ctx) => {
+                            ctx.strokeRect(160, 260, 40, 80);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר 2 ריבועים קטנים לחלונות',
+                        draw: (ctx) => {
+                            ctx.strokeRect(220, 230, 40, 40);
+                            ctx.strokeRect(220, 280, 40, 40);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הבית!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FFE4B5';
+                            ctx.fillRect(121, 201, 158, 138);
+                            ctx.fillStyle = '#8B0000';
+                            ctx.beginPath();
+                            ctx.moveTo(200, 120);
+                            ctx.lineTo(110, 200);
+                            ctx.lineTo(290, 200);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.fillStyle = '#8B4513';
+                            ctx.fillRect(161, 261, 38, 78);
+                            ctx.fillStyle = '#87CEEB';
+                            ctx.fillRect(221, 231, 38, 38);
+                            ctx.fillRect(221, 281, 38, 38);
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(120, 200, 160, 140);
+                            ctx.strokeRect(160, 260, 40, 80);
+                            ctx.strokeRect(220, 230, 40, 40);
+                            ctx.strokeRect(220, 280, 40, 40);
+                        }
+                    }
+                ]
+            },
+            car: {
+                name: 'מכונית',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר מלבן ארוך לגוף המכונית',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(100, 220, 200, 60);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר מלבן קטן למעלה לתא הנוסעים',
+                        draw: (ctx) => {
+                            ctx.strokeRect(140, 180, 120, 40);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר 2 עיגולים לגלגלים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(150, 280, 25, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(250, 280, 25, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר 2 ריבועים קטנים לחלונות',
+                        draw: (ctx) => {
+                            ctx.strokeRect(150, 190, 40, 25);
+                            ctx.strokeRect(210, 190, 40, 25);
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את המכונית!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FF0000';
+                            ctx.fillRect(101, 221, 198, 58);
+                            ctx.fillRect(141, 181, 118, 38);
+                            ctx.fillStyle = '#000000';
+                            ctx.beginPath();
+                            ctx.arc(150, 280, 25, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(250, 280, 25, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = '#87CEEB';
+                            ctx.fillRect(151, 191, 38, 23);
+                            ctx.fillRect(211, 191, 38, 23);
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(100, 220, 200, 60);
+                            ctx.strokeRect(140, 180, 120, 40);
+                            ctx.strokeRect(150, 190, 40, 25);
+                            ctx.strokeRect(210, 190, 40, 25);
+                        }
+                    }
+                ]
+            },
+            face: {
+                name: 'פרצוף',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר עיגול גדול לראש',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 100, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר 2 עיגולים קטנים לעיניים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(170, 180, 15, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(230, 180, 15, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צבע את העיניים בשחור',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#000000';
+                            ctx.beginPath();
+                            ctx.arc(170, 180, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(230, 180, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר חצי עיגול גדול לחיוך',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 210, 40, 0, Math.PI);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הפנים בצבע ורוד!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FFDAB9';
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 98, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(200, 200, 100, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.fillStyle = '#000000';
+                            ctx.beginPath();
+                            ctx.arc(170, 180, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(230, 180, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(200, 210, 40, 0, Math.PI);
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            },
+            butterfly: {
+                name: 'פרפר',
+                steps: [
+                    {
+                        instruction: 'שלב 1: צייר אליפסה ארוכה לגוף הפרפר',
+                        draw: (ctx) => {
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.ellipse(200, 200, 10, 50, 0, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 2: צייר 2 עיגולים גדולים לכנפיים העליונות',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(150, 180, 40, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(250, 180, 40, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 3: צייר 2 עיגולים קטנים יותר לכנפיים התחתונות',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.arc(150, 230, 30, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(250, 230, 30, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 4: צייר 2 קווים מעוקלים למחושים',
+                        draw: (ctx) => {
+                            ctx.beginPath();
+                            ctx.moveTo(200, 150);
+                            ctx.quadraticCurveTo(180, 130, 170, 140);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(200, 150);
+                            ctx.quadraticCurveTo(220, 130, 230, 140);
+                            ctx.stroke();
+                        }
+                    },
+                    {
+                        instruction: 'שלב 5: צבע את הפרפר בצבעים יפים!',
+                        draw: (ctx) => {
+                            ctx.fillStyle = '#FF1493';
+                            ctx.beginPath();
+                            ctx.arc(150, 180, 38, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(250, 180, 38, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            ctx.arc(150, 230, 28, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.arc(250, 230, 28, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.fillStyle = '#8B4513';
+                            ctx.beginPath();
+                            ctx.ellipse(200, 200, 10, 50, 0, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                        }
+                    }
+                ]
+            }
+        };
+        
+        // Initialize color palette
+        function initColorPalette() {
+            const palette = document.getElementById('colorPalette');
+            colors.forEach(color => {
+                const btn = document.createElement('div');
+                btn.className = 'color-btn' + (color === currentColor ? ' selected' : '');
+                btn.style.background = color;
+                btn.onclick = () => selectColor(color, btn);
+                palette.appendChild(btn);
+            });
+        }
+        
+        function selectColor(color, btn) {
+            currentColor = color;
+            eraserMode = false;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('drawBtn').classList.add('active');
+            document.getElementById('eraserBtn').classList.remove('active');
+        }
+        
+        function selectDrawTool() {
+            eraserMode = false;
+            document.getElementById('drawBtn').classList.add('active');
+            document.getElementById('eraserBtn').classList.remove('active');
+            if (currentColor === '#FFFFFF') {
+                currentColor = '#000000';
+                updateColorSelection();
+            }
+        }
+        
+        function selectEraser() {
+            eraserMode = true;
+            document.getElementById('eraserBtn').classList.add('active');
+            document.getElementById('drawBtn').classList.remove('active');
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+        }
+        
+        function updateColorSelection() {
+            const palette = document.getElementById('colorPalette');
+            const colorBtns = palette.querySelectorAll('.color-btn');
+            colorBtns.forEach(btn => {
+                if (btn.style.background === currentColor || 
+                    (currentColor === '#000000' && btn.style.background === 'rgb(0, 0, 0)')) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+        
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            brushSize = e.target.value;
+        });
+        
+        function showMenu() {
+            document.getElementById('drawingMenu').classList.remove('hidden');
+            document.getElementById('overlay').classList.remove('hidden');
+        }
+        
+        function hideMenu() {
+            document.getElementById('drawingMenu').classList.add('hidden');
+            document.getElementById('overlay').classList.add('hidden');
+        }
+        
+        function selectDrawing(drawingName) {
+            currentDrawing = drawings[drawingName];
+            currentStep = 0;
+            clearBothCanvases();
+            updateDisplay();
+            hideMenu();
+            document.getElementById('nextBtn').disabled = false;
+        }
+        
+        function clearBothCanvases() {
+            exampleCtx.clearRect(0, 0, exampleCanvas.width, exampleCanvas.height);
+            myCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        }
+        
+        function clearMyCanvas() {
+            myCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        }
+        
+        function updateDisplay() {
+            if (!currentDrawing) return;
+            
+            // Clear example canvas
+            exampleCtx.clearRect(0, 0, exampleCanvas.width, exampleCanvas.height);
+            
+            // Draw all steps up to current
+            for (let i = 0; i <= currentStep; i++) {
+                currentDrawing.steps[i].draw(exampleCtx);
+            }
+            
+            // Update instruction
+            document.getElementById('instruction').textContent = currentDrawing.steps[currentStep].instruction;
+            document.getElementById('stepCounter').textContent = `שלב ${currentStep + 1} מתוך ${currentDrawing.steps.length}`;
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === currentDrawing.steps.length - 1;
+        }
+        
+        function nextStep() {
+            if (currentStep < currentDrawing.steps.length - 1) {
+                currentStep++;
+                updateDisplay();
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateDisplay();
+            }
+        }
+        
+        // Drawing on my canvas
+        myCanvas.addEventListener('mousedown', startDrawing);
+        myCanvas.addEventListener('mousemove', draw);
+        myCanvas.addEventListener('mouseup', stopDrawing);
+        myCanvas.addEventListener('mouseout', stopDrawing);
+        
+        myCanvas.addEventListener('touchstart', handleTouchStart);
+        myCanvas.addEventListener('touchmove', handleTouchMove);
+        myCanvas.addEventListener('touchend', stopDrawing);
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = myCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            myCtx.beginPath();
+            myCtx.moveTo(x, y);
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = myCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            if (eraserMode) {
+                myCtx.globalCompositeOperation = 'destination-out';
+                myCtx.lineTo(x, y);
+                myCtx.lineWidth = brushSize * 2;
+                myCtx.lineCap = 'round';
+                myCtx.stroke();
+            } else {
+                myCtx.globalCompositeOperation = 'source-over';
+                myCtx.lineTo(x, y);
+                myCtx.strokeStyle = currentColor;
+                myCtx.lineWidth = brushSize;
+                myCtx.lineCap = 'round';
+                myCtx.stroke();
+            }
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = myCanvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            isDrawing = true;
+            myCtx.beginPath();
+            myCtx.moveTo(x, y);
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const touch = e.touches[0];
+            const rect = myCanvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            if (eraserMode) {
+                myCtx.globalCompositeOperation = 'destination-out';
+                myCtx.lineTo(x, y);
+                myCtx.lineWidth = brushSize * 2;
+                myCtx.lineCap = 'round';
+                myCtx.stroke();
+            } else {
+                myCtx.globalCompositeOperation = 'source-over';
+                myCtx.lineTo(x, y);
+                myCtx.strokeStyle = currentColor;
+                myCtx.lineWidth = brushSize;
+                myCtx.lineCap = 'round';
+                myCtx.stroke();
+            }
+        }
+        
+        // Initialize
+        initColorPalette();
+    </script>
+</body>
+</html>
