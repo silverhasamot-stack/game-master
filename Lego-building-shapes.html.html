@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧱 מעבדת הבנייה שלי</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #87CEEB 0%, #B0E0E6 50%, #90EE90 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+            opacity: 0.8;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .cloud1 { top: 50px; left: 100px; width: 120px; height: 60px; }
+        .cloud2 { top: 80px; right: 200px; width: 150px; height: 80px; animation-delay: 3s; }
+        .cloud3 { top: 150px; left: 300px; width: 130px; height: 70px; animation-delay: 6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(30px) translateY(-10px); }
+        }
+
+        .sun {
+            position: absolute;
+            top: 40px;
+            right: 100px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #FFD700 60%, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #FFD700;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3.5em;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: 4px solid;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .tab-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .build-tab {
+            background: #FF6B35;
+            color: white;
+            border-color: #FF8C42;
+        }
+
+        .examples-tab {
+            background: #9B59B6;
+            color: white;
+            border-color: #BA68C8;
+        }
+
+        .build-tab.active {
+            background: #FF4500;
+        }
+
+        .examples-tab.active {
+            background: #7B2CBF;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .color-palette {
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
+            padding: 25px;
+            border-radius: 30px;
+            border: 6px solid #FFD54F;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .color-palette h2 {
+            text-align: center;
+            color: #F57C00;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .colors {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .color-btn {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(0,0,0,0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 2em;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .color-btn.selected {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 5px white, 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #DC3545 0%, #C82333 100%);
+            color: white;
+            padding: 20px;
+            border: 4px solid #BD2130;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .clear-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .build-area {
+            background: linear-gradient(135deg, #FFECB3 0%, #FFD54F 100%);
+            padding: 30px;
+            border-radius: 30px;
+            border: 8px solid #FFA726;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        .grid-container {
+            background: linear-gradient(135deg, #E1F5FE 0%, #C8E6C9 100%);
+            padding: 20px;
+            border-radius: 20px;
+            border: 4px solid #FFA726;
+            display: inline-block;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1px;
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .cell {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .cell:hover {
+            transform: scale(1.1);
+        }
+
+        .cell.filled {
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.4);
+        }
+
+        .cell.filled::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .cell.filled::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 5px;
+            height: 5px;
+            background: black;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .examples-section {
+            background: linear-gradient(135deg, #E1BEE7 0%, #F8BBD0 100%);
+            padding: 40px;
+            border-radius: 30px;
+            border: 8px solid #BA68C8;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .examples-section h2 {
+            text-align: center;
+            color: #6A1B9A;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .examples-section p {
+            text-align: center;
+            color: #7B1FA2;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .example-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF9C4 100%);
+            padding: 25px;
+            border-radius: 25px;
+            border: 4px solid #FFD54F;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .example-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+        }
+
+        .example-card h3 {
+            text-align: center;
+            color: #6A1B9A;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .example-preview {
+            background: linear-gradient(135deg, #E1F5FE 0%, #C8E6C9 100%);
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid #BA68C8;
+            display: flex;
+            justify-content: center;
+        }
+
+        .preview-grid {
+            display: grid;
+            gap: 1px;
+            background: #2E7D32;
+            padding: 3px;
+            border-radius: 8px;
+        }
+
+        .preview-cell {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, #2E7D32 0%, #43A047 100%);
+            border-top: 8px solid #1B5E20;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    <div class="sun"></div>
+
+    <div class="container">
+        <h1>🧱 מעבדת הבנייה שלי 🧱</h1>
+
+        <div class="tabs">
+            <button class="tab-btn build-tab active" onclick="switchTab('build')">🔨 בנייה חופשית</button>
+            <button class="tab-btn examples-tab" onclick="switchTab('examples')">📚 דוגמאות</button>
+        </div>
+
+        <div id="buildMode" class="main-content">
+            <div class="sidebar">
+                <div class="color-palette">
+                    <h2>🎨 קוביות</h2>
+                    <div class="colors" id="colorPalette"></div>
+                </div>
+                <button class="clear-btn" onclick="clearGrid()">🗑️ נקה הכל</button>
+            </div>
+
+            <div class="build-area">
+                <div class="grid-container">
+                    <div class="grid" id="buildGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="examplesMode" class="examples-section hidden">
+            <h2>📚 דוגמאות לבנייה</h2>
+            <p>לחצו על דוגמה כדי להעתיק אותה! 👇</p>
+            <div class="examples-grid" id="examplesGrid"></div>
+        </div>
+    </div>
+
+    <div class="ground"></div>
+
+    <script>
+        const GRID_SIZE = 20;
+        const colors = [
+            { id: 'red', color: '#DC3545' },
+            { id: 'blue', color: '#0D6EFD' },
+            { id: 'green', color: '#198754' },
+            { id: 'yellow', color: '#FFC107' },
+            { id: 'orange', color: '#FD7E14' },
+            { id: 'brown', color: '#8B4513' },
+            { id: 'purple', color: '#9B59B6' },
+            { id: 'pink', color: '#E91E63' }
+        ];
+
+        const examples = [
+            {
+                name: '🏠 בית',
+                pattern: [
+                    [null, null, null, 'red', 'red', 'red', null, null, null],
+                    [null, null, 'red', 'red', 'red', 'red', 'red', null, null],
+                    [null, 'red', 'red', 'red', 'red', 'red', 'red', 'red', null],
+                    ['yellow', 'yellow', 'yellow', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'yellow'],
+                    ['yellow', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'yellow', 'yellow'],
+                    ['yellow', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'yellow', 'yellow'],
+                    ['yellow', 'yellow', 'brown', 'brown', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow'],
+                    ['yellow', 'yellow', 'brown', 'brown', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow']
+                ]
+            },
+            {
+                name: '🌲 עץ',
+                pattern: [
+                    [null, null, null, 'green', null, null, null],
+                    [null, null, 'green', 'green', 'green', null, null],
+                    [null, 'green', 'green', 'green', 'green', 'green', null],
+                    ['green', 'green', 'green', 'green', 'green', 'green', 'green'],
+                    [null, null, 'green', 'green', 'green', null, null],
+                    [null, 'green', 'green', 'green', 'green', 'green', null],
+                    [null, null, null, 'brown', null, null, null],
+                    [null, null, null, 'brown', null, null, null],
+                    [null, null, null, 'brown', null, null, null]
+                ]
+            },
+            {
+                name: '🚗 מכונית',
+                pattern: [
+                    [null, null, null, 'red', 'red', 'red', null, null, null],
+                    [null, null, 'red', 'blue', 'blue', 'red', 'red', null, null],
+                    [null, 'red', 'red', 'red', 'red', 'red', 'red', 'red', null],
+                    ['red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                    ['red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                    [null, 'brown', 'brown', null, null, null, 'brown', 'brown', null]
+                ]
+            },
+            {
+                name: '🌸 פרח',
+                pattern: [
+                    [null, null, 'pink', null, 'pink', null, null],
+                    [null, 'pink', 'pink', 'pink', 'pink', 'pink', null],
+                    ['pink', 'pink', 'yellow', 'yellow', 'yellow', 'pink', 'pink'],
+                    [null, 'pink', 'yellow', 'yellow', 'yellow', 'pink', null],
+                    ['pink', 'pink', 'yellow', 'yellow', 'yellow', 'pink', 'pink'],
+                    [null, 'pink', 'pink', 'pink', 'pink', 'pink', null],
+                    [null, null, 'pink', 'green', 'pink', null, null],
+                    [null, null, null, 'green', null, null, null],
+                    [null, null, null, 'green', null, null, null]
+                ]
+            },
+            {
+                name: '🚀 רקטה',
+                pattern: [
+                    [null, null, null, 'red', null, null, null],
+                    [null, null, 'red', 'red', 'red', null, null],
+                    [null, null, 'red', 'red', 'red', null, null],
+                    [null, null, 'blue', 'blue', 'blue', null, null],
+                    [null, null, 'blue', 'blue', 'blue', null, null],
+                    [null, null, 'blue', 'blue', 'blue', null, null],
+                    [null, 'orange', 'yellow', 'yellow', 'yellow', 'orange', null],
+                    ['orange', 'orange', 'yellow', 'yellow', 'yellow', 'orange', 'orange']
+                ]
+            },
+            {
+                name: '❤️ לב',
+                pattern: [
+                    [null, 'red', 'red', null, 'red', 'red', null],
+                    ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                    ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                    ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                    [null, 'red', 'red', 'red', 'red', 'red', null],
+                    [null, null, 'red', 'red', 'red', null, null],
+                    [null, null, null, 'red', null, null, null]
+                ]
+            }
+        ];
+
+        let grid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null));
+        let selectedColor = 'red';
+
+        function init() {
+            createColorPalette();
+            createBuildGrid();
+            createExamples();
+        }
+
+        function createColorPalette() {
+            const palette = document.getElementById('colorPalette');
+            colors.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'color-btn';
+                if (c.id === selectedColor) btn.classList.add('selected');
+                btn.style.backgroundColor = c.color;
+                btn.textContent = '🧱';
+                btn.onclick = () => selectColor(c.id);
+                palette.appendChild(btn);
+            });
+        }
+
+        function selectColor(colorId) {
+            selectedColor = colorId;
+            document.querySelectorAll('.color-btn').forEach((btn, idx) => {
+                btn.classList.toggle('selected', colors[idx].id === colorId);
+            });
+        }
+
+        function createBuildGrid() {
+            const gridEl = document.getElementById('buildGrid');
+            gridEl.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 35px)`;
+            
+            for (let i = 0; i < GRID_SIZE; i++) {
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.onclick = handleCellClick;
+                    gridEl.appendChild(cell);
+                }
+            }
+        }
+
+        function handleCellClick(e) {
+            const row = parseInt(e.target.dataset.row);
+            const col = parseInt(e.target.dataset.col);
+            
+            if (grid[row][col] === selectedColor) {
+                grid[row][col] = null;
+            } else {
+                grid[row][col] = selectedColor;
+            }
+            updateBuildGrid();
+        }
+
+        function updateBuildGrid() {
+            const cells = document.querySelectorAll('#buildGrid .cell');
+            let idx = 0;
+            for (let i = 0; i < GRID_SIZE; i++) {
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    const cell = cells[idx];
+                    const colorId = grid[i][j];
+                    if (colorId) {
+                        const colorObj = colors.find(c => c.id === colorId);
+                        cell.style.backgroundColor = colorObj.color;
+                        cell.classList.add('filled');
+                    } else {
+                        cell.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                        cell.classList.remove('filled');
+                    }
+                    idx++;
+                }
+            }
+        }
+
+        function clearGrid() {
+            grid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null));
+            updateBuildGrid();
+        }
+
+        function createExamples() {
+            const examplesGrid = document.getElementById('examplesGrid');
+            examples.forEach(ex => {
+                const card = document.createElement('div');
+                card.className = 'example-card';
+                card.onclick = () => loadExample(ex);
+                
+                const title = document.createElement('h3');
+                title.textContent = ex.name;
+                
+                const preview = document.createElement('div');
+                preview.className = 'example-preview';
+                
+                const previewGrid = document.createElement('div');
+                previewGrid.className = 'preview-grid';
+                previewGrid.style.gridTemplateColumns = `repeat(${ex.pattern[0].length}, 20px)`;
+                
+                ex.pattern.forEach(row => {
+                    row.forEach(cell => {
+                        const cellDiv = document.createElement('div');
+                        cellDiv.className = 'preview-cell';
+                        if (cell) {
+                            const colorObj = colors.find(c => c.id === cell);
+                            cellDiv.style.backgroundColor = colorObj.color;
+                            cellDiv.style.border = '1px solid rgba(0,0,0,0.3)';
+                        } else {
+                            cellDiv.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                            cellDiv.style.border = '1px solid rgba(255,255,255,0.4)';
+                        }
+                        previewGrid.appendChild(cellDiv);
+                    });
+                });
+                
+                preview.appendChild(previewGrid);
+                card.appendChild(title);
+                card.appendChild(preview);
+                examplesGrid.appendChild(card);
+            });
+        }
+
+        function loadExample(example) {
+            grid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null));
+            const startRow = Math.floor((GRID_SIZE - example.pattern.length) / 2);
+            const startCol = Math.floor((GRID_SIZE - example.pattern[0].length) / 2);
+            
+            example.pattern.forEach((row, i) => {
+                row.forEach((cell, j) => {
+                    if (cell) {
+                        grid[startRow + i][startCol + j] = cell;
+                    }
+                });
+            });
+            
+            switchTab('build');
+            updateBuildGrid();
+        }
+
+        function switchTab(tab) {
+            const buildMode = document.getElementById('buildMode');
+            const examplesMode = document.getElementById('examplesMode');
+            const buildBtn = document.querySelector('.build-tab');
+            const examplesBtn = document.querySelector('.examples-tab');
+            
+            if (tab === 'build') {
+                buildMode.classList.remove('hidden');
+                examplesMode.classList.add('hidden');
+                buildBtn.classList.add('active');
+                examplesBtn.classList.remove('active');
+            } else {
+                buildMode.classList.add('hidden');
+                examplesMode.classList.remove('hidden');
+                buildBtn.classList.remove('active');
+                examplesBtn.classList.add('active');
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
