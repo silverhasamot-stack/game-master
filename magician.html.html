@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧙‍♂️ הקוסם הקסום שלי 🧙‍♂️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .main-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+        }
+        
+        .container {
+            text-align: center;
+            position: relative;
+        }
+        
+        .title {
+            color: #daa520;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(218, 165, 32, 0.6);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .title:hover {
+            transform: scale(1.05);
+        }
+        
+        .name-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .name-popup.hidden {
+            display: none;
+        }
+        
+        .name-box {
+            background: linear-gradient(135deg, #2d1b69 0%, #1a1a2e 100%);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 50px rgba(138, 43, 226, 0.5);
+            text-align: center;
+            max-width: 400px;
+            border: 3px solid #8a2be2;
+        }
+        
+        .name-box h2 {
+            color: #daa520;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+        }
+        
+        .name-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            border: 3px solid #8a2be2;
+            border-radius: 15px;
+            text-align: center;
+            font-family: 'Comic Sans MS', sans-serif;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .name-box input:focus {
+            outline: none;
+            border-color: #daa520;
+            box-shadow: 0 0 15px rgba(218, 165, 32, 0.5);
+        }
+        
+        .name-box button {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #8a2be2 0%, #9370db 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .name-box button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.5);
+        }
+        
+        .wizard-container {
+            width: 400px;
+            height: 550px;
+            position: relative;
+            margin: 0 auto;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .feet {
+            position: absolute;
+            bottom: 40px;
+            left: 140px;
+            width: 120px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+        
+        .shoe {
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(135deg, #4b0082 0%, #6a0dad 100%);
+            border-radius: 50% 50% 20% 20%;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.4);
+        }
+        
+        .shoe::before {
+            content: '';
+            width: 35px;
+            height: 15px;
+            background: linear-gradient(135deg, #6a0dad 0%, #8a2be2 100%);
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -8px;
+            left: 7px;
+        }
+        
+        .wizard-body {
+            width: 120px;
+            height: 160px;
+            background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
+            position: absolute;
+            bottom: 65px;
+            left: 140px;
+            clip-path: polygon(20% 0%, 80% 0%, 95% 100%, 5% 100%);
+            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.6);
+            animation: float 4s ease-in-out infinite;
+            z-index: 2;
+        }
+        
+        .robe-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, #daa520 2px, transparent 2px),
+                radial-gradient(circle, #ffd700 1px, transparent 1px);
+            background-size: 20px 20px, 15px 15px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.3;
+        }
+        
+        .belt {
+            width: 110px;
+            height: 15px;
+            background: linear-gradient(135deg, #daa520 0%, #ffd700 100%);
+            position: absolute;
+            top: 70px;
+            left: 5px;
+            box-shadow: 0 3px 10px rgba(218, 165, 32, 0.5);
+        }
+        
+        .belt-buckle {
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            border: 2px solid #8b4513;
+            border-radius: 3px;
+            position: absolute;
+            top: -3px;
+            left: 45px;
+        }
+        
+        .arms {
+            position: absolute;
+            top: 305px;
+            left: 138px;
+            width: 124px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 3;
+        }
+        
+        .arm {
+            width: 26px;
+            height: 70px;
+            background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
+            border-radius: 13px;
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.4);
+            position: relative;
+        }
+        
+        .arm.left {
+            transform-origin: top center;
+            animation: armWaveLeft 3s ease-in-out infinite;
+        }
+        
+        .arm.right {
+            transform-origin: top center;
+            animation: armWaveRight 3s ease-in-out infinite;
+            z-index: 5;
+        }
+        
+        .hand {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffdbac;
+            border-radius: 50%;
+            bottom: -6px;
+            left: 3px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .wand {
+            position: absolute;
+            width: 85px;
+            height: 5px;
+            background: linear-gradient(90deg, #8b4513 0%, #a0522d 100%);
+            border-radius: 3px;
+            bottom: -12px;
+            left: -70px;
+            transform: rotate(45deg);
+            transform-origin: right center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        .wand-star {
+            position: absolute;
+            left: -10px;
+            top: -10px;
+            font-size: 22px;
+            color: #daa520;
+            animation: wandStarGlow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.8));
+        }
+        
+        .wizard-head {
+            width: 90px;
+            height: 90px;
+            background: #ffdbac;
+            border-radius: 50%;
+            position: absolute;
+            top: 180px;
+            left: 155px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            animation: headBob 4s ease-in-out infinite;
+            z-index: 4;
+        }
+        
+        .beard {
+            width: 70px;
+            height: 80px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 50% 50% 60% 60%;
+            position: absolute;
+            bottom: -50px;
+            left: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+        }
+        
+        .beard::before,
+        .beard::after {
+            content: '';
+            position: absolute;
+            background: #f5f5f5;
+            border-radius: 50%;
+        }
+        
+        .beard::before {
+            width: 28px;
+            height: 40px;
+            left: -10px;
+            top: 15px;
+        }
+        
+        .beard::after {
+            width: 28px;
+            height: 40px;
+            right: -10px;
+            top: 15px;
+        }
+        
+        .hat {
+            width: 110px;
+            height: 120px;
+            background: linear-gradient(135deg, #4b0082 0%, #6a0dad 100%);
+            position: absolute;
+            top: -102px;
+            left: -10px;
+            clip-path: polygon(50% 0%, 35% 75%, 15% 100%, 85% 100%, 65% 75%);
+            box-shadow: 0 5px 20px rgba(75, 0, 130, 0.5);
+            z-index: 5;
+        }
+        
+        .hat-brim {
+            width: 115px;
+            height: 18px;
+            background: linear-gradient(135deg, #4b0082 0%, #6a0dad 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -3px;
+            left: -2px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        }
+        
+        .hat-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        .hat-star {
+            position: absolute;
+            color: #daa520;
+            font-size: 18px;
+            animation: starTwinkle 2s ease-in-out infinite;
+        }
+        
+        .eyes {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            width: 50px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+        }
+        
+        .eye {
+            width: 18px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            position: relative;
+            animation: blink 5s ease-in-out infinite;
+        }
+        
+        .shine {
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+        }
+        
+        .nose {
+            width: 14px;
+            height: 20px;
+            background: #ffb6a3;
+            border-radius: 50%;
+            position: absolute;
+            top: 46px;
+            left: 38px;
+            z-index: 2;
+        }
+        
+        .mustache {
+            position: absolute;
+            top: 54px;
+            left: 12px;
+            width: 66px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+        }
+        
+        .mustache-part {
+            width: 28px;
+            height: 14px;
+            background: #f5f5f5;
+            border-radius: 50% 50% 60% 60%;
+        }
+        
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        
+        .btn-spell {
+            background: linear-gradient(135deg, #8a2be2 0%, #9370db 100%);
+            color: white;
+        }
+        
+        .btn-praise {
+            background: linear-gradient(135deg, #daa520 0%, #ffd700 100%);
+            color: #1a1a2e;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0) scale(1);
+        }
+        
+        .status {
+            color: #daa520;
+            font-size: 24px;
+            margin-top: 25px;
+            height: 35px;
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+            font-weight: bold;
+        }
+        
+        .magic-meter-container {
+            background: linear-gradient(135deg, #2d1b69 0%, #1a1a2e 100%);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+            min-width: 220px;
+            border: 2px solid #8a2be2;
+        }
+        
+        .magic-meter-title {
+            color: #daa520;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+        }
+        
+        .magic-bar-container {
+            width: 100%;
+            height: 30px;
+            background: #0f3460;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #8a2be2;
+        }
+        
+        .magic-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8a2be2 0%, #daa520 100%);
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .magic-percentage {
+            color: #daa520;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 8px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+        }
+        
+        .magic-status {
+            color: #9370db;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: center;
+            height: 20px;
+        }
+        
+        .last-interaction {
+            color: #8a8a8a;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        #spellContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes headBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes armWaveLeft {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-5deg); }
+        }
+        
+        @keyframes armWaveRight {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        @keyframes wandStarGlow {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg);
+                filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.8));
+            }
+            50% { 
+                transform: scale(1.3) rotate(180deg);
+                filter: drop-shadow(0 0 20px rgba(218, 165, 32, 1));
+            }
+        }
+        
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes blink {
+            0%, 94%, 100% { transform: scaleY(1); }
+            95%, 97% { transform: scaleY(0.1); }
+        }
+        
+        @keyframes armCastSpell {
+            0% { transform: rotate(0deg); }
+            30% { transform: rotate(90deg); }
+            50% { transform: rotate(100deg); }
+            70% { transform: rotate(90deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes excitedFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="name-popup" id="namePopup">
+        <div class="name-box">
+            <h2>איזה שם תרצה לתת לקוסם שלך? 🧙‍♂️✨</h2>
+            <input type="text" id="wizardNameInput" placeholder="הקלד שם..." maxlength="15">
+            <button onclick="saveWizardName()">שמור ✨</button>
+        </div>
+    </div>
+    
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="title" id="wizardTitle" onclick="changeName()">🧙‍♂️ הקוסם הקסום שלי 🧙‍♂️</div>
+            
+            <div class="wizard-container" id="wizardContainer">
+                <div class="feet">
+                    <div class="shoe"></div>
+                    <div class="shoe"></div>
+                </div>
+                
+                <div class="wizard-body">
+                    <div class="robe-pattern"></div>
+                    <div class="belt">
+                        <div class="belt-buckle"></div>
+                    </div>
+                </div>
+                
+                <div class="arms">
+                    <div class="arm left">
+                        <div class="hand"></div>
+                    </div>
+                    <div class="arm right">
+                        <div class="hand">
+                            <div class="wand" id="wand">
+                                <div class="wand-star">⭐</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wizard-head">
+                    <div class="hat">
+                        <div class="hat-stars">
+                            <span class="hat-star" style="left: 30%; top: 20%;">⭐</span>
+                            <span class="hat-star" style="left: 60%; top: 35%; animation-delay: 0.5s;">✨</span>
+                            <span class="hat-star" style="left: 45%; top: 50%; animation-delay: 1s;">🌙</span>
+                        </div>
+                        <div class="hat-brim"></div>
+                    </div>
+                    
+                    <div class="eyes">
+                        <div class="eye"><div class="shine"></div></div>
+                        <div class="eye"><div class="shine"></div></div>
+                    </div>
+                    
+                    <div class="nose"></div>
+                    
+                    <div class="mustache">
+                        <div class="mustache-part"></div>
+                        <div class="mustache-part"></div>
+                    </div>
+                    
+                    <div class="beard"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-spell" onclick="castSpell()">⭐ בצע קסם</button>
+                <button class="btn btn-praise" onclick="praiseWizard()">👏 שבח במחיאת כפיים</button>
+            </div>
+            
+            <div class="status" id="status"></div>
+        </div>
+        
+        <div class="magic-meter-container">
+            <div class="magic-meter-title">✨ מד כוח קסם</div>
+            <div class="magic-bar-container">
+                <div class="magic-bar" id="magicBar"></div>
+            </div>
+            <div class="magic-percentage" id="magicPercentage">75%</div>
+            <div class="magic-status" id="magicStatus">כוח קסם חזק 🌟</div>
+            <div class="last-interaction" id="lastInteraction">לחץ כדי לקסום עם הקוסם</div>
+        </div>
+    </div>
+    
+    <div id="spellContainer"></div>
+
+    <script>
+        let isCasting = false;
+        let spells = 0;
+        let praises = 0;
+        let magicLevel = 75;
+        let lastInteractionTime = Date.now();
+        let wizardName = '';
+        
+        const spellSound = new Audio('https://files.catbox.moe/01lxup.mp3');
+        const praiseSound = new Audio('https://files.catbox.moe/5grux8.mp3');
+        spellSound.volume = 0.5;
+        praiseSound.volume = 0.6;
+        
+        // טעינת שם הקוסם
+        const savedName = localStorage.getItem('wizardName');
+        if (savedName) {
+            wizardName = savedName;
+            document.getElementById('wizardTitle').textContent = `🧙‍♂️ ${wizardName} הקוסם 🧙‍♂️`;
+            document.getElementById('namePopup').classList.add('hidden');
+        } else {
+            setTimeout(() => {
+                document.getElementById('wizardNameInput').focus();
+            }, 500);
+        }
+        
+        function saveWizardName() {
+            const input = document.getElementById('wizardNameInput').value.trim();
+            if (input) {
+                wizardName = input;
+                localStorage.setItem('wizardName', wizardName);
+                document.getElementById('wizardTitle').textContent = `🧙‍♂️ ${wizardName} הקוסם 🧙‍♂️`;
+                document.getElementById('namePopup').classList.add('hidden');
+            }
+        }
+        
+        function changeName() {
+            document.getElementById('namePopup').classList.remove('hidden');
+            document.getElementById('wizardNameInput').value = wizardName;
+            document.getElementById('wizardNameInput').focus();
+        }
+        
+        document.getElementById('wizardNameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                saveWizardName();
+            }
+        });
+        
+        function updateMagicDisplay() {
+            const magicBar = document.getElementById('magicBar');
+            const magicPercentage = document.getElementById('magicPercentage');
+            const magicStatus = document.getElementById('magicStatus');
+            
+            magicBar.style.width = magicLevel + '%';
+            magicPercentage.textContent = magicLevel + '%';
+            
+            if (magicLevel >= 90) {
+                magicStatus.textContent = 'אדון הקסמים! 🔮✨';
+                magicBar.style.background = 'linear-gradient(90deg, #daa520 0%, #ffd700 100%)';
+            } else if (magicLevel >= 70) {
+                magicStatus.textContent = 'כוח קסם חזק 🌟';
+                magicBar.style.background = 'linear-gradient(90deg, #8a2be2 0%, #daa520 100%)';
+            } else if (magicLevel >= 50) {
+                magicStatus.textContent = 'קסם טוב 💫';
+                magicBar.style.background = 'linear-gradient(90deg, #9370db 0%, #8a2be2 100%)';
+            } else if (magicLevel >= 30) {
+                magicStatus.textContent = 'כוח קסם חלש 🌙';
+                magicBar.style.background = 'linear-gradient(90deg, #4b0082 0%, #9370db 100%)';
+            } else {
+                magicStatus.textContent = 'זקוק לכוח קסם! 😔';
+                magicBar.style.background = 'linear-gradient(90deg, #2d1b69 0%, #4b0082 100%)';
+            }
+        }
+        
+        function updateLastInteraction() {
+            lastInteractionTime = Date.now();
+            document.getElementById('lastInteraction').textContent = 'זה עתה קסמת עם הקוסם ✨';
+            setTimeout(() => updateTimeDisplay(), 3000);
+        }
+        
+        function updateTimeDisplay() {
+            const now = Date.now();
+            const diff = now - lastInteractionTime;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                document.getElementById('lastInteraction').textContent = `לפני ${hours} שעות`;
+            } else if (minutes > 0) {
+                document.getElementById('lastInteraction').textContent = `לפני ${minutes} דקות`;
+            } else {
+                document.getElementById('lastInteraction').textContent = 'זה עתה';
+            }
+        }
+        
+        updateMagicDisplay();
+        setInterval(updateTimeDisplay, 60000);
+        
+        function castSpell() {
+            if (isCasting) return;
+            isCasting = true;
+            
+            const rightArm = document.querySelector('.arm.right');
+            const body = document.querySelector('.wizard-body');
+            
+            magicLevel = Math.min(100, magicLevel + 8);
+            updateMagicDisplay();
+            updateLastInteraction();
+            
+            spellSound.currentTime = 0;
+            spellSound.play().catch(e => {});
+            
+            rightArm.style.animation = 'armCastSpell 2s ease-in-out';
+            body.style.animation = 'excitedFloat 1s ease-in-out 2';
+            
+            setTimeout(() => {
+                const wandStar = document.querySelector('.wand-star');
+                const rect = wandStar.getBoundingClientRect();
+                createRandomSpell(rect.left, rect.top);
+            }, 800);
+            
+            spells++;
+            const messages = ['אבאקדברה! ✨', 'כוח הקסם זורם! 🔮', 'הוקוס פוקוס! ⭐', 'קסם נפלא! 💫', 'אלקזאם! 🌟'];
+            document.getElementById('status').textContent = messages[spells % messages.length];
+            
+            setTimeout(() => {
+                document.getElementById('status').textContent = '';
+                isCasting = false;
+                rightArm.style.animation = 'armWaveRight 3s ease-in-out infinite';
+                body.style.animation = 'float 4s ease-in-out infinite';
+            }, 2500);
+        }
+        
+        function praiseWizard() {
+            const head = document.querySelector('.wizard-head');
+            const body = document.querySelector('.wizard-body');
+            
+            magicLevel = Math.min(100, magicLevel + 5);
+            updateMagicDisplay();
+            updateLastInteraction();
+            praises++;
+            
+            praiseSound.currentTime = 0;
+            praiseSound.play().catch(e => {});
+            
+            head.style.animation = 'none';
+            head.style.transform = 'translateY(-8px) scale(1.05)';
+            body.style.animation = 'excitedFloat 0.8s ease-in-out 3';
+            
+            setTimeout(() => {
+                head.style.animation = 'headBob 4s ease-in-out infinite';
+                head.style.transform = '';
+                body.style.animation = 'float 4s ease-in-out infinite';
+            }, 2000);
+            
+            createHearts();
+            
+            const messages = ['תודה רבה! ✨', 'אתה נפלא! 🌟', 'מעריך מאוד! 💫', 'נעים לי! 🔮', 'אתה הטוב ביותר! ⭐'];
+            document.getElementById('status').textContent = messages[praises % messages.length];
+            setTimeout(() => {
+                document.getElementById('status').textContent = '';
+            }, 2000);
+        }
+        
+        function createRandomSpell(x, y) {
+            const spells = ['lightning', 'fireworks', 'spiral', 'stars', 'ice'];
+            const spell = spells[Math.floor(Math.random() * spells.length)];
+            
+            if (spell === 'lightning') createLightning(x, y);
+            else if (spell === 'fireworks') createFireworks(x, y);
+            else if (spell === 'spiral') createSpiral(x, y);
+            else if (spell === 'stars') createStars(x, y);
+            else if (spell === 'ice') createIce(x, y);
+        }
+        
+        function createParticle(x, y, style) {
+            const p = document.createElement('div');
+            p.style.position = 'fixed';
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            p.style.pointerEvents = 'none';
+            Object.assign(p.style, style);
+            document.getElementById('spellContainer').appendChild(p);
+            return p;
+        }
+        
+        function createLightning(x, y) {
+            // הבזק רקע
+            const flash = createParticle(0, 0, {
+                position: 'fixed',
+                width: '100%',
+                height: '100%',
+                background: 'rgba(255, 255, 255, 0.4)',
+                zIndex: '9998',
+                transition: 'opacity 0.15s'
+            });
+            
+            setTimeout(() => flash.style.opacity = '0', 50);
+            setTimeout(() => flash.remove(), 200);
+            
+            // ברקים מרובים
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const bolt = createParticle(x, y, {
+                        width: '6px',
+                        height: (100 + Math.random() * 80) + 'px',
+                        background: 'linear-gradient(180deg, #ffffff 0%, #ffeb3b 30%, #ffc107 60%, #ff9800 100%)',
+                        boxShadow: '0 0 30px #ffeb3b, 0 0 60px #ff9800, 0 0 90px #ffeb3b',
+                        filter: 'brightness(2)',
+                        transform: `rotate(${Math.random() * 60 - 30}deg)`,
+                        transition: 'all 1s ease-out'
+                    });
+                    
+                    setTimeout(() => {
+                        bolt.style.transform += ' translateY(150px)';
+                        bolt.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => bolt.remove(), 1100);
+                }, i * 80);
+            }
+            
+            // ניצוצות מתפזרים
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const spark = createParticle(x, y, {
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: '#ffeb3b',
+                        boxShadow: '0 0 20px #ffeb3b, 0 0 40px #ff9800',
+                        transition: 'all 1.2s ease-out'
+                    });
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 100 + 50;
+                    
+                    setTimeout(() => {
+                        spark.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                        spark.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => spark.remove(), 1300);
+                }, Math.random() * 500);
+            }
+        }
+        
+        function createFireworks(x, y) {
+            // רקטה עם שובל
+            const rocket = createParticle(x, y, {
+                width: '8px',
+                height: '28px',
+                background: 'linear-gradient(180deg, #fff 0%, #ff6b35 50%, #fdc830 100%)',
+                borderRadius: '50% 50% 3px 3px',
+                boxShadow: '0 0 35px #ff6b35, 0 0 70px #fdc830',
+                filter: 'brightness(1.8)',
+                transition: 'all 0.9s ease-out'
+            });
+            
+            // שובל של הרקטה
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const trail = createParticle(x + 4, y + i * 5, {
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        background: '#fdc830',
+                        boxShadow: '0 0 25px #ff6b35',
+                        transition: 'all 0.6s ease-out'
+                    });
+                    
+                    setTimeout(() => {
+                        trail.style.opacity = '0';
+                        trail.style.transform = 'scale(0.3)';
+                    }, 50);
+                    
+                    setTimeout(() => trail.remove(), 700);
+                }, i * 60);
+            }
+            
+            setTimeout(() => {
+                rocket.style.transform = 'translateY(-220px)';
+                rocket.style.opacity = '0';
+            }, 50);
+            
+            setTimeout(() => {
+                rocket.remove();
+                const colors = ['#ff0844', '#ff6b35', '#f7931e', '#fdc830', '#37ecba', '#72ddf7', '#5e5ce6', '#bf5af2'];
+                
+                // התפוצצות ראשונית - 50 חלקיקים
+                for (let i = 0; i < 50; i++) {
+                    const particle = createParticle(x, y - 220, {
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '50%',
+                        background: colors[Math.floor(Math.random() * colors.length)],
+                        boxShadow: '0 0 35px currentColor, 0 0 70px currentColor',
+                        filter: 'brightness(1.8)',
+                        transition: 'all 2.8s ease-out'
+                    });
+                    
+                    const angle = (Math.PI * 2 * i) / 50;
+                    const distance = 130 + Math.random() * 90;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    setTimeout(() => {
+                        particle.style.transform = `translate(${tx}px, ${ty}px) scale(0.3)`;
+                        particle.style.opacity = '0';
+                    }, 50);
+                    
+                    // התפוצצות משנית
+                    setTimeout(() => {
+                        for (let j = 0; j < 5; j++) {
+                            const subParticle = createParticle(x + tx, y - 220 + ty, {
+                                width: '6px',
+                                height: '6px',
+                                borderRadius: '50%',
+                                background: particle.style.background,
+                                boxShadow: '0 0 20px currentColor',
+                                transition: 'all 1.2s ease-out'
+                            });
+                            
+                            const subAngle = Math.random() * Math.PI * 2;
+                            const subDistance = 30 + Math.random() * 25;
+                            
+                            setTimeout(() => {
+                                subParticle.style.transform = `translate(${Math.cos(subAngle) * subDistance}px, ${Math.sin(subAngle) * subDistance}px)`;
+                                subParticle.style.opacity = '0';
+                            }, 50);
+                            
+                            setTimeout(() => subParticle.remove(), 1300);
+                        }
+                    }, 900);
+                    
+                    setTimeout(() => particle.remove(), 3200);
+                }
+            }, 950);
+        }
+        
+        function createSpiral(x, y) {
+            const emojis = [
+                { emoji: '💜', color: '#a855f7' },
+                { emoji: '💙', color: '#3b82f6' },
+                { emoji: '💚', color: '#10b981' },
+                { emoji: '💛', color: '#fbbf24' },
+                { emoji: '🧡', color: '#f97316' },
+                { emoji: '❤️', color: '#ef4444' }
+            ];
+            
+            // לבבות עם שובלים
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = createParticle(x, y, {
+                        fontSize: '50px',
+                        filter: `drop-shadow(0 0 20px ${emojis[i % emojis.length].color}) brightness(1.6)`,
+                        transition: 'all 3s ease-out'
+                    });
+                    particle.textContent = emojis[i % emojis.length].emoji;
+                    
+                    // שובל
+                    const trail = createParticle(x, y, {
+                        fontSize: '35px',
+                        opacity: '0.6',
+                        filter: `drop-shadow(0 0 15px ${emojis[i % emojis.length].color}) blur(2px)`,
+                        transition: 'all 2.7s ease-out'
+                    });
+                    trail.textContent = emojis[i % emojis.length].emoji;
+                    
+                    const rotation = i * 60;
+                    const spiralX = -50 - (i * 5);
+                    const spiralY = -210 - (i * 11);
+                    
+                    setTimeout(() => {
+                        particle.style.transform = `translate(${spiralX}px, ${spiralY}px) rotate(${rotation * 4}deg) scale(1.5)`;
+                        particle.style.opacity = '0';
+                        
+                        trail.style.transform = `translate(${spiralX * 0.7}px, ${spiralY * 0.7}px) rotate(${rotation * 3}deg)`;
+                        trail.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                        trail.remove();
+                    }, 3500);
+                }, i * 100);
+            }
+            
+            // ניצוצות מסתובבים - 35 חלקיקים
+            for (let i = 0; i < 35; i++) {
+                setTimeout(() => {
+                    const sparkle = createParticle(x, y, {
+                        fontSize: '22px',
+                        filter: 'drop-shadow(0 0 12px #fff) brightness(1.5)',
+                        transition: 'all 2.2s ease-out'
+                    });
+                    sparkle.textContent = '✨';
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 80 + Math.random() * 70;
+                    
+                    setTimeout(() => {
+                        sparkle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance - 110}px) rotate(${Math.random() * 720}deg)`;
+                        sparkle.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => sparkle.remove(), 2700);
+                }, Math.random() * 1600);
+            }
+        }
+        
+        function createStars(x, y) {
+            const stars = ['⭐', '✨', '🌟', '💫', '✴️'];
+            
+            // גל ראשון - כוכבים גדולים
+            for (let i = 0; i < 18; i++) {
+                setTimeout(() => {
+                    const star = createParticle(x, y, {
+                        fontSize: '62px',
+                        filter: 'drop-shadow(0 0 30px #fbbf24) drop-shadow(0 0 60px #fbbf24) brightness(2)',
+                        transition: 'all 2.6s ease-out'
+                    });
+                    star.textContent = stars[Math.floor(Math.random() * stars.length)];
+                    
+                    const angle = (Math.PI * 2 * i) / 18;
+                    const distance = 125 + Math.random() * 85;
+                    
+                    setTimeout(() => {
+                        star.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(2.6) rotate(${Math.random() * 1080}deg)`;
+                        star.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => star.remove(), 3100);
+                }, i * 75);
+            }
+            
+            // גל שני - כוכבים קטנים
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const miniStar = createParticle(x, y, {
+                        fontSize: '32px',
+                        filter: 'drop-shadow(0 0 18px #fff) brightness(2.2)',
+                        transition: 'all 2.1s ease-out'
+                    });
+                    miniStar.textContent = '✨';
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 85 + Math.random() * 105;
+                    
+                    setTimeout(() => {
+                        miniStar.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 720}deg)`;
+                        miniStar.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => miniStar.remove(), 2600);
+                }, Math.random() * 1300);
+            }
+            
+            // זוהר מרכזי מתפשט
+            const glow = createParticle(x, y, {
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.7) 40%, transparent 70%)',
+                filter: 'blur(25px)',
+                transform: 'translate(-30px, -30px)',
+                transition: 'all 2.3s ease-out'
+            });
+            
+            setTimeout(() => {
+                glow.style.transform = 'translate(-30px, -30px) scale(10)';
+                glow.style.opacity = '0';
+            }, 50);
+            
+            setTimeout(() => glow.remove(), 2800);
+        }
+        
+        function createIce(x, y) {
+            // רסיסי קרח גדולים - 14 רסיסים
+            for (let i = 0; i < 14; i++) {
+                setTimeout(() => {
+                    const shard = createParticle(x + Math.random() * 60 - 30, y, {
+                        width: '16px',
+                        height: '75px',
+                        background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(179,229,252,1) 30%, rgba(79,195,247,1) 60%, rgba(2,136,209,1) 100%)',
+                        clipPath: 'polygon(50% 0%, 70% 25%, 60% 50%, 80% 75%, 50% 100%, 20% 75%, 40% 50%, 30% 25%)',
+                        boxShadow: '0 0 35px rgba(79,195,247,0.9), 0 0 70px rgba(79,195,247,0.7), inset 0 0 25px rgba(255,255,255,0.6)',
+                        filter: 'brightness(1.7) drop-shadow(0 0 12px #4fc3f7)',
+                        transition: 'all 2.2s ease-out'
+                    });
+                    
+                    const angle = (Math.PI * 2 * i) / 14;
+                    const distance = 110 + Math.random() * 90;
+                    
+                    setTimeout(() => {
+                        shard.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 360}deg) scale(1.4)`;
+                        shard.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => shard.remove(), 2700);
+                }, i * 90);
+            }
+            
+            // חלקיקי קרח קטנים - 45 חלקיקים
+            for (let i = 0; i < 45; i++) {
+                setTimeout(() => {
+                    const particle = createParticle(x, y, {
+                        width: '9px',
+                        height: '9px',
+                        borderRadius: '50%',
+                        background: '#b3e5fc',
+                        boxShadow: '0 0 25px #4fc3f7, 0 0 50px rgba(79,195,247,0.7)',
+                        filter: 'brightness(2.2)',
+                        transition: 'all 2s ease-out'
+                    });
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 65 + Math.random() * 90;
+                    
+                    setTimeout(() => {
+                        particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                        particle.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => particle.remove(), 2500);
+                }, Math.random() * 1100);
+            }
+            
+            // גלי כפור מתפשטים - 4 גלים
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    const frost = createParticle(x, y, {
+                        width: '90px',
+                        height: '90px',
+                        borderRadius: '50%',
+                        border: '4px solid rgba(79,195,247,0.9)',
+                        boxShadow: '0 0 45px rgba(79,195,247,0.9), inset 0 0 35px rgba(179,229,252,0.6)',
+                        transform: 'translate(-45px, -45px)',
+                        transition: 'all 2.7s ease-out'
+                    });
+                    
+                    setTimeout(() => {
+                        frost.style.transform = 'translate(-45px, -45px) scale(5)';
+                        frost.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => frost.remove(), 3200);
+                }, i * 350);
+            }
+            
+            // פתיתי שלג מנצנצים - 25 פתיתים
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const snowflake = createParticle(x, y, {
+                        fontSize: '28px',
+                        filter: 'drop-shadow(0 0 18px #4fc3f7) brightness(1.7)',
+                        transition: 'all 2.2s ease-out'
+                    });
+                    snowflake.textContent = '❄️';
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 75 + Math.random() * 70;
+                    
+                    setTimeout(() => {
+                        snowflake.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 720}deg)`;
+                        snowflake.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => snowflake.remove(), 2700);
+                }, Math.random() * 1300);
+            }
+        }
+        
+        function createHearts() {
+            const container = document.getElementById('wizardContainer');
+            const hearts = ['💜', '💛', '⭐', '✨', '🌟'];
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.style.position = 'absolute';
+                    heart.style.left = (Math.random() * 300 + 50) + 'px';
+                    heart.style.top = (Math.random() * 200 + 100) + 'px';
+                    heart.style.fontSize = '30px';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.transition = 'all 2s ease-out';
+                    heart.style.pointerEvents = 'none';
+                    
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.style.transform = 'translateY(-100px)';
+                        heart.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => heart.remove(), 2500);
+                }, i * 100);
+            }
+        }
+        
+        document.getElementById('wizardContainer').addEventListener('click', praiseWizard);
+        
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                const sparkle = document.createElement('div');
+                sparkle.textContent = '✨';
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                sparkle.style.fontSize = '20px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.animation = 'starTwinkle 2s ease-in-out';
+                sparkle.style.opacity = '0.5';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 2000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>}
