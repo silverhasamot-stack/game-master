@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יוצר מנגינות - בונה שירים</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .workspace {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .notes-palette {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .palette-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .note-btn {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .note-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(-5px);
+        }
+        
+        .note-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .melody-area {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+        }
+        
+        .melody-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .melody-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            gap: 10px;
+            min-height: 300px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px dashed #ddd;
+        }
+        
+        .melody-grid.empty::after {
+            content: 'גרור צלילים לכאן או לחץ עליהם כדי להוסיף למנגינה';
+            position: absolute;
+            color: #999;
+            font-size: 1.1em;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .placed-note {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .placed-note:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .placed-note.playing {
+            animation: pulse 0.3s ease-in-out;
+            transform: scale(1.2);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .note-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .note-duration {
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.8);
+            margin-top: 5px;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .placed-note:hover .delete-btn {
+            display: flex;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .play-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .stop-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .clear-btn {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .save-btn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn:active {
+            transform: translateY(0);
+        }
+        
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f9ff;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        
+        .speed-control label {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .speed-control input {
+            width: 120px;
+        }
+        
+        .note-do { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .note-re { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+        .note-mi { background: linear-gradient(135deg, #FFE66D, #FFAB4C); }
+        .note-fa { background: linear-gradient(135deg, #A8E6CF, #56CCF2); }
+        .note-sol { background: linear-gradient(135deg, #C7CEEA, #A6A9E0); }
+        .note-la { background: linear-gradient(135deg, #FFDDE1, #FFB6C1); }
+        .note-si { background: linear-gradient(135deg, #B4E7CE, #76B852); }
+        
+        .instructions {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            list-style: none;
+            padding-right: 0;
+        }
+        
+        .instructions li {
+            padding: 8px 0;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .instructions li::before {
+            content: "🎵 ";
+            margin-left: 10px;
+        }
+
+        .saved-melodies {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .saved-melodies h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .saved-melody-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .saved-melody-item .melody-name {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .saved-melody-item .melody-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .saved-melody-item button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .load-melody-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .delete-melody-btn {
+            background: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 יוצר מנגינות - בונה שירים 🎼</h1>
+        <p class="subtitle">צור מנגינות משלך! גרור צלילים או לחץ עליהם כדי לבנות שיר</p>
+        
+        <div class="workspace">
+            <div class="notes-palette">
+                <div class="palette-title">🎹 צלילים</div>
+                <div class="note-btn" onclick="addNote('do')" data-note="do">
+                    <span>דו (C)</span>
+                    <span>🔊</span>
+                </div>
+                <div class="note-btn" onclick="addNote('re')" data-note="re">
+                    <span>רה (D)</span>
+                    <span>🔊</span>
+                </div>
+                <div class="note-btn" onclick="addNote('mi')" data-note="mi">
+                    <span>מי (E)</span>
+                    <span>🔊</span>
+                </div>
+                <div class="note-btn" onclick="addNote('fa')" data-note="fa">
+                    <span>פה (F)</span>
+                    <span>🔊</span>
+                </div>
+                <div class="note-btn" onclick="addNote('sol')" data-note="sol">
+                    <span>סול (G)</span>
+                    <span>🔊</span>
+                </div>
+                <div class="note-btn" onclick="addNote('la')" data-note="la">
+                    <span>לה (A)</span>
+                    <span>🔊</span>
+                </div>
+                <div class="note-btn" onclick="addNote('si')" data-note="si">
+                    <span>סי (B)</span>
+                    <span>🔊</span>
+                </div>
+            </div>
+            
+            <div class="melody-area">
+                <div class="melody-title">🎼 המנגינה שלך</div>
+                <div class="melody-grid" id="melodyGrid"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn play-btn" onclick="playMelody()">
+                <span>▶️</span>
+                <span>נגן מנגינה</span>
+            </button>
+            <button class="control-btn stop-btn" onclick="stopMelody()">
+                <span>⏹️</span>
+                <span>עצור</span>
+            </button>
+            <button class="control-btn clear-btn" onclick="clearMelody()">
+                <span>🗑️</span>
+                <span>נקה הכל</span>
+            </button>
+            <button class="control-btn save-btn" onclick="saveMelody()">
+                <span>💾</span>
+                <span>שמור מנגינה</span>
+            </button>
+            
+            <div class="speed-control">
+                <label>מהירות:</label>
+                <input type="range" id="speedSlider" min="200" max="800" value="500" step="50">
+                <span id="speedValue">רגילה</span>
+            </div>
+        </div>
+
+        <div class="saved-melodies" id="savedMelodies" style="display: none;">
+            <h3>💾 מנגינות שמורות</h3>
+            <div id="savedMelodiesList"></div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📖 איך להשתמש:</h3>
+            <ul>
+                <li>לחץ על צליל בצד שמאל כדי להוסיף אותו למנגינה</li>
+                <li>לחץ על ה-X האדום כדי למחוק צליל</li>
+                <li>לחץ "נגן מנגינה" כדי לשמוע את היצירה שלך</li>
+                <li>התאם את המהירות בעזרת הסליידר</li>
+                <li>שמור את המנגינה שלך ותוכל לטעון אותה מאוחר יותר</li>
+                <li>בנה שירים מורכבים עם עשרות צלילים!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const notes = {
+            do: { name: 'דו', freq: 261.63, color: 'note-do' },
+            re: { name: 'רה', freq: 293.66, color: 'note-re' },
+            mi: { name: 'מי', freq: 329.63, color: 'note-mi' },
+            fa: { name: 'פה', freq: 349.23, color: 'note-fa' },
+            sol: { name: 'סול', freq: 392.00, color: 'note-sol' },
+            la: { name: 'לה', freq: 440.00, color: 'note-la' },
+            si: { name: 'סי', freq: 493.88, color: 'note-si' }
+        };
+        
+        let melody = [];
+        let isPlaying = false;
+        let currentSpeed = 500;
+        let savedMelodies = [];
+
+        loadSavedMelodies();
+
+        function addNote(noteType) {
+            const noteData = notes[noteType];
+            melody.push(noteType);
+            renderMelody();
+            playSound(noteData.freq);
+        }
+
+        function renderMelody() {
+            const grid = document.getElementById('melodyGrid');
+            grid.innerHTML = '';
+            
+            melody.forEach((noteType, index) => {
+                const noteData = notes[noteType];
+                const noteEl = document.createElement('div');
+                noteEl.className = `placed-note ${noteData.color}`;
+                noteEl.innerHTML = `
+                    <span class="note-name">${noteData.name}</span>
+                    <button class="delete-btn" onclick="deleteNote(${index})">✕</button>
+                `;
+                
+                noteEl.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('delete-btn')) {
+                        playSound(noteData.freq);
+                    }
+                });
+                
+                grid.appendChild(noteEl);
+            });
+        }
+
+        function deleteNote(index) {
+            melody.splice(index, 1);
+            renderMelody();
+        }
+
+        function clearMelody() {
+            if (melody.length === 0 || confirm('למחוק את כל המנגינה?')) {
+                melody = [];
+                renderMelody();
+            }
+        }
+
+        function playSound(freq, duration = 0.5) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = freq;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        async function playMelody() {
+            if (melody.length === 0) {
+                alert('הוסף צלילים למנגינה תחילה!');
+                return;
+            }
+            
+            if (isPlaying) return;
+            isPlaying = true;
+            
+            const noteElements = document.querySelectorAll('.placed-note');
+            
+            for (let i = 0; i < melody.length; i++) {
+                if (!isPlaying) break;
+                
+                const noteType = melody[i];
+                const noteData = notes[noteType];
+                const noteEl = noteElements[i];
+                
+                noteEl.classList.add('playing');
+                playSound(noteData.freq);
+                
+                await new Promise(resolve => setTimeout(resolve, currentSpeed));
+                noteEl.classList.remove('playing');
+            }
+            
+            isPlaying = false;
+        }
+
+        function stopMelody() {
+            isPlaying = false;
+            document.querySelectorAll('.placed-note').forEach(el => {
+                el.classList.remove('playing');
+            });
+        }
+
+        function saveMelody() {
+            if (melody.length === 0) {
+                alert('אין מה לשמור! הוסף צלילים למנגינה');
+                return;
+            }
+
+            const name = prompt('תן שם למנגינה:');
+            if (!name) return;
+
+            const savedMelody = {
+                name: name,
+                notes: [...melody],
+                date: new Date().toLocaleString('he-IL')
+            };
+
+            savedMelodies.push(savedMelody);
+            saveMelodiesToStorage();
+            renderSavedMelodies();
+            alert('המנגינה נשמרה בהצלחה! ✅');
+        }
+
+        function saveMelodiesToStorage() {
+            const melodiesData = JSON.stringify(savedMelodies);
+            // Store in a variable since localStorage is not available
+            window.savedMelodiesData = melodiesData;
+        }
+
+        function loadSavedMelodies() {
+            if (window.savedMelodiesData) {
+                try {
+                    savedMelodies = JSON.parse(window.savedMelodiesData);
+                    renderSavedMelodies();
+                } catch (e) {
+                    savedMelodies = [];
+                }
+            }
+        }
+
+        function renderSavedMelodies() {
+            const container = document.getElementById('savedMelodies');
+            const list = document.getElementById('savedMelodiesList');
+            
+            if (savedMelodies.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            list.innerHTML = '';
+
+            savedMelodies.forEach((savedMelody, index) => {
+                const item = document.createElement('div');
+                item.className = 'saved-melody-item';
+                item.innerHTML = `
+                    <div>
+                        <div class="melody-name">${savedMelody.name}</div>
+                        <small style="color: #999;">${savedMelody.notes.length} צלילים | ${savedMelody.date}</small>
+                    </div>
+                    <div class="melody-actions">
+                        <button class="load-melody-btn" onclick="loadMelody(${index})">טען</button>
+                        <button class="delete-melody-btn" onclick="deleteSavedMelody(${index})">מחק</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function loadMelody(index) {
+            const savedMelody = savedMelodies[index];
+            melody = [...savedMelody.notes];
+            renderMelody();
+            alert(`המנגינה "${savedMelody.name}" נטענה! ✅`);
+        }
+
+        function deleteSavedMelody(index) {
+            if (confirm('למחוק את המנגינה השמורה?')) {
+                savedMelodies.splice(index, 1);
+                saveMelodiesToStorage();
+                renderSavedMelodies();
+            }
+        }
+
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        
+        speedSlider.addEventListener('input', (e) => {
+            currentSpeed = parseInt(e.target.value);
+            const speeds = {
+                200: 'מהירה מאוד',
+                300: 'מהירה',
+                400: 'מהירה קצת',
+                500: 'רגילה',
+                600: 'איטית קצת',
+                700: 'איטית',
+                800: 'איטית מאוד'
+            };
+            speedValue.textContent = speeds[currentSpeed] || 'רגילה';
+        });
+
+        // Play sound when clicking note buttons
+        document.querySelectorAll('.note-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const noteType = this.dataset.note;
+                const noteData = notes[noteType];
+                playSound(noteData.freq, 0.3);
+            });
+        });
+    </script>
+</body>
+</html>
